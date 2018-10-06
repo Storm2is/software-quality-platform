@@ -29,6 +29,7 @@ public class IndexController {
         return "index";
     }
 
+
     @GetMapping("/add") // Map ONLY GET Requests
     public @ResponseBody
     String addNewUser(@RequestParam String name,
@@ -49,4 +50,5 @@ public class IndexController {
         // This returns a JSON or XML with the users
         return userRepository.findAll();
     }
+
 }
