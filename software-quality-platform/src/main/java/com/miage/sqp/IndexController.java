@@ -20,4 +20,11 @@ public class IndexController {
     public String index(Model model) {
         return "index";
     }
+
+    // To test the logout page
+    /* @GetMapping("/logout")
+    public String logout(Model model) {
+        return "logout";
+    }
+     */
 }
