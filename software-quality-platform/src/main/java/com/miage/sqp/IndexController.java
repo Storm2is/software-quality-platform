@@ -38,9 +38,10 @@ public class IndexController {
         // @RequestParam means it is a parameter from the GET or POST request
 
         User n = new User();
-        n.setName(name);
+        n.setUsername(name);
         n.setEmail(email);
         userRepository.save(n);
+        
         return "Saved";
     }
 

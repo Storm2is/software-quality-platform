@@ -9,6 +9,7 @@ package com.miage.sqp;
  *
  * @author Tamer
  */
+import java.sql.Connection;
 import java.util.Arrays;
 
 import org.springframework.boot.CommandLineRunner;
