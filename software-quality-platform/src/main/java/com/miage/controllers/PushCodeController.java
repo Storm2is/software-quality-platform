@@ -86,7 +86,7 @@ public class PushCodeController {
         f.setFileName(file.getOriginalFilename());
         f.setExtension(file.getContentType());
         f.setTags(tags);
-        f.setFilePath(System.getProperty("user.dir") + env.getProperty("storage.localfolder") + file.getOriginalFilename());
+        f.setFilePath(System.getProperty("user.dir") + "/" + env.getProperty("storage.localfolder") + "/" + file.getOriginalFilename());
         fileRepository.save(f);
 
         return "redirect:/";
