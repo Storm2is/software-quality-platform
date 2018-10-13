@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miage.sqp;
+package com.miage;
 
 /**
  *
  * @author Tamer
  */
-import java.sql.Connection;
 import java.util.Arrays;
 
 import org.springframework.boot.CommandLineRunner;

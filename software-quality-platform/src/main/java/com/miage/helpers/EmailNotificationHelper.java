@@ -3,20 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miage.sqp;
+package com.miage.helpers;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
-import javax.mail.Address;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -24,13 +20,13 @@ import javax.mail.internet.MimeMessage;
  *
  * @author Mikhail
  */
-public class EmailNotificationController {
+public class EmailNotificationHelper {
+
     static Properties mailServerProperties;
     static Session getMailSession;
     static MimeMessage generateMailMessage;
- 
-    
-     /**
+
+    /**
      * Create and send MimeMessage using the parameters provided.
      *
      * @param subject subject of the email
@@ -38,11 +34,11 @@ public class EmailNotificationController {
      * @param recipients list of recipients
      * @throws MessagingException, AddressException
      */
-    public static void generateAndSendEmail(String subject, String messageBody, 
-                                            ArrayList<String>  recipients ) 
-                                            throws AddressException, MessagingException {
+    public static void generateAndSendEmail(String subject, String messageBody,
+            ArrayList<String> recipients)
+            throws AddressException, MessagingException {
         List<InternetAddress> to = new ArrayList<>(recipients.size());
-        
+
         mailServerProperties = System.getProperties();
         mailServerProperties.put("mail.smtp.port", "587");
         mailServerProperties.put("mail.smtp.auth", "true");
@@ -51,16 +47,17 @@ public class EmailNotificationController {
         generateMailMessage = new MimeMessage(getMailSession);
         recipients.forEach(adress -> {
             InternetAddress newAdress = null;
-            newAdress = new InternetAddress();     
+            newAdress = new InternetAddress();
             newAdress.setAddress(adress);
-            if (newAdress!=null)
-                to.add(newAdress);         
-        } );
-        InternetAddress[] arrayOfRecipients = to.toArray(new InternetAddress[to.size()]);      
-        generateMailMessage.addRecipients(Message.RecipientType.TO, arrayOfRecipients);      
-        generateMailMessage.setSubject(subject);      
+            if (newAdress != null) {
+                to.add(newAdress);
+            }
+        });
+        InternetAddress[] arrayOfRecipients = to.toArray(new InternetAddress[to.size()]);
+        generateMailMessage.addRecipients(Message.RecipientType.TO, arrayOfRecipients);
+        generateMailMessage.setSubject(subject);
         generateMailMessage.setContent(messageBody, "text/html");
-               
+
         Transport transport = getMailSession.getTransport("smtp");
 
         // Enter your correct gmail UserID and Password and do not forget Allow less secure apps in google setups

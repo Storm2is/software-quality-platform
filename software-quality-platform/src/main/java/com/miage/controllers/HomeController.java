@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miage.sqp;
+package com.miage.controllers;
 
 import com.miage.models.User;
 import com.miage.repositories.UserRepository;
@@ -19,16 +19,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Tamer
  */
 @Controller
-public class IndexController {
+public class HomeController {
 
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/home")
+    @GetMapping("/")
     public String index(Model model) {
-        return "index";
+        return "home";
     }
-
 
     @GetMapping("/add") // Map ONLY GET Requests
     public @ResponseBody
@@ -41,7 +40,7 @@ public class IndexController {
         n.setUsername(name);
         n.setEmail(email);
         userRepository.save(n);
-        
+
         return "Saved";
     }
 

@@ -14,7 +14,6 @@ import javax.persistence.Id;
  *
  * @author Tamer
  */
-
 @Entity // This tells Hibernate to make a table out of this class
 public class User {
 
@@ -25,16 +24,15 @@ public class User {
     private String Username;
 
     private String email;
-    
-    private String password;
 
+    private String password;
 
     public User() {
         this.Username = "";
         this.email = "";
         this.password = "";
     }
-    
+
     // Id is auto generated
     public User(String Username, String email, String password) {
         this.Username = Username;
@@ -73,7 +71,5 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
 
 }

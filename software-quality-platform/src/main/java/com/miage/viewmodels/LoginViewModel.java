@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miage.viewmodel;
+package com.miage.viewmodels;
 
 import com.miage.models.User;
 import com.miage.repositories.UserRepository;
@@ -12,13 +12,13 @@ import com.miage.repositories.UserRepository;
  *
  * @author kimphuong
  */
-public class Login
-{
+public class LoginViewModel {
+
     private String UserName;
     private String Password;
     private UserRepository userRepository;
 
-    public Login(String UserName, String Password) {
+    public LoginViewModel(String UserName, String Password) {
         this.UserName = UserName;
         this.Password = Password;
     }
@@ -38,16 +38,13 @@ public class Login
     public void setPassword(String Password) {
         this.Password = Password;
     }
-     
-    public boolean Validate(Login login)
-    {
-        for(User user : userRepository.findAll())
-        {
-            if (user.getUsername()==login.getUserName() && user.getPassword() == login.getPassword())
-            {
+
+    public boolean Validate(LoginViewModel login) {
+        for (User user : userRepository.findAll()) {
+            if (user.getUsername() == login.getUserName() && user.getPassword() == login.getPassword()) {
                 return true;
             }
         }
         return false;
-    }    
+    }
 }
