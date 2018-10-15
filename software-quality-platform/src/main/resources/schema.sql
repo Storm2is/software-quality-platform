@@ -22,6 +22,20 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS annotation;
+DROP TABLE IF EXISTS file;
+DROP TABLE IF EXISTS filelog;
+DROP TABLE IF EXISTS status;
+DROP TABLE IF EXISTS user;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+
+
 --
 -- Table structure for table `annotation`
 --
@@ -47,6 +61,7 @@ CREATE TABLE `file` (
   `fileName` varchar(30) NOT NULL,
   `extension` varchar(10) NOT NULL,
   `filePath` varchar(100) NOT NULL,
+  `fileLength` int(7) NOT NULL,
   `tags` varchar(100) NOT NULL,
   `pushTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `userId` int(11) DEFAULT NULL,
@@ -89,8 +104,7 @@ CREATE TABLE `user` (
   `lastName` varchar(50) NOT NULL,
   `phone` varchar(15) NOT NULL,
   `email` varchar(30) NOT NULL,
-  `username` varchar(15) NOT NULL,
-  `password` varchar(20) NOT NULL
+  `username` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
