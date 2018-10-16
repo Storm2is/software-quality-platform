@@ -21,11 +21,11 @@ import javax.mail.internet.MimeMessage;
  * @author Mikhail
  */
 public class EmailNotificationHelper {
-
+     
     static Properties mailServerProperties;
     static Session getMailSession;
     static MimeMessage generateMailMessage;
-
+ 
     /**
      * Create and send MimeMessage using the parameters provided.
      *
@@ -55,14 +55,16 @@ public class EmailNotificationHelper {
         });
         InternetAddress[] arrayOfRecipients = to.toArray(new InternetAddress[to.size()]);
         generateMailMessage.addRecipients(Message.RecipientType.TO, arrayOfRecipients);
-        generateMailMessage.setSubject(subject);
+        generateMailMessage.setSubject(subject);        
         generateMailMessage.setContent(messageBody, "text/html");
 
         Transport transport = getMailSession.getTransport("smtp");
 
         // Enter your correct gmail UserID and Password and do not forget Allow less secure apps in google setups
-        //https://support.google.com/accounts/answer/6010255?p=lsa_blocked&hl=en&visit_id=636746096287423049-1895637013&rd=1
-        transport.connect("smtp.gmail.com", "USERID", "PASSWORD");
+        //https://support.google.com/accounts/answer/6010255?p=lsa_blocked&hl=en&visit_id=636746096287423049-1895637013&rd=1 
+        String login="stormcorp2is";
+        String password = "2is_storm";
+        transport.connect("smtp.gmail.com", login, password);
         transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
         transport.close();
     }

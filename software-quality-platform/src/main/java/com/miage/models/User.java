@@ -19,7 +19,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer userId;
 
     private String Username;
 
@@ -41,11 +41,11 @@ public class User {
     }
 
     public Integer getId() {
-        return id;
+        return userId;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.userId = userId;
     }
 
     public String getUsername() {
