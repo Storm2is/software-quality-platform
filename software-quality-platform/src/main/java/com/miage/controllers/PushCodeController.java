@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.mail.MessagingException;
 import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  *
@@ -128,4 +129,12 @@ public class PushCodeController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
+    
+    @RequestMapping("/files/GetAllFile")
+    public ResponseEntity<Resource> getAllFile ()
+    {
+        return (ResponseEntity<Resource>) fileRepository.findAll();
+    }
+            
+    
 }
