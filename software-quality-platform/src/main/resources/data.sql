@@ -7,6 +7,7 @@ INSERT INTO `user` (`userId`, `firstName`, `lastName`, `phone`, `email`, `userna
 (6, 'shujun ', 'Hou', '0612743287', 'shujunhou99@gmail.com', 'shujun'),
 (7, 'Collective ', 'Reviewer', '0123456789', 'collective_review@gmail.com', 'collective');
 
+
 INSERT INTO `status` (`statusId`, `statusName`) VALUES
 (1, 'Ready'),
 (2, 'InProgress'),
@@ -17,6 +18,7 @@ INSERT INTO `file` (`fileId`, `fileName`, `extension`, `filePath`,`fileLength`,`
 (1, 'Initializing spring boot maven', 'java', 'C:\\Users\\Documents\\GitHub\\software-quality-platform', 100, '#java, #mvc, #spring', '2018-10-06 08:30:24', 1, 3),
 (2, 'logPage html', 'html', 'C:\\Users\\Documents\\GitHub\\software-quality-platform\\software-quality-platform\\src', 12, '#html, #javascript, #php', '2018-10-06 08:32:17', 2, 2),
 (3, 'log control', 'java', 'C:\\Users\\Documents\\GitHub\\software-quality-platform\\software-quality-platform\\src', 54, '#java, #hashmap, #maven', '2018-10-06 12:00:00', 4, 4);
+
 
 INSERT INTO `annotation` (`annotationId`, `lineNb`, `comment`, `time`, `isResolved`, `userId`, `fileId`) VALUES
 (1, 45, 'function not work', '2018-10-01 14:00:00', 1, 3, 1),

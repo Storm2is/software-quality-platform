@@ -5,6 +5,7 @@
  */
 package com.miage.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,12 +20,17 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+
+    @Column(name = "userId")
     private Integer userId;
 
+    @Column(name = "username")
     private String Username;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
     private String password;
 
     public User() {
