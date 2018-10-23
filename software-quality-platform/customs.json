@@ -1,0 +1,11 @@
+{
+    "elements": {},
+    "attributes": {
+        "v-bind:title": {
+            "context": "img"
+        },
+        "v-for": {
+            "context": "div"
+        }
+    }
+}

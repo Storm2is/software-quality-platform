@@ -1,0 +1,59 @@
+
+img {
+    opacity: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: .5s ease;
+    backface-visibility: hidden;
+}
+
+.middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.animate:hover img {
+    opacity: 0.3;
+
+}
+
+.zoom {
+    transition: transform .2s;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto;
+}
+
+.zoom:hover {
+    -ms-transform: scale(1.5); /* IE 9 */
+    -webkit-transform: scale(1.5); /* Safari 3-8 */
+    transform: scale(1.5);
+}
+
+.animate:hover .middle {
+    opacity: 1;
+}
+
+.text {
+    color: black;
+    font-size: 14px;
+    text-transform: uppercase;
+    padding-bottom: 60px;
+}
+
+.text a {
+    text-decoration:none;
+    color: black;
+
+}
+
+.text-divider{margin: 2em 0; line-height: 0; text-align: center;}
+.text-divider span{background-color: #ffffff; padding: 1em;}
+.text-divider:before{ content: " "; display: block; border-top: 1px solid dodgerblue; border-bottom: 1px solid dodgerblue;}
