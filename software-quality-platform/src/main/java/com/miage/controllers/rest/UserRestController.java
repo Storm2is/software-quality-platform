@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miage.controllers;
+package com.miage.controllers.rest;
 
 import com.miage.models.User;
 import com.miage.repositories.UserRepository;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Rayhane
  */
 @RestController
-public class UserController {
+public class UserRestController {
 
     @Autowired
     UserRepository userRepository;
@@ -36,13 +36,10 @@ public class UserController {
         return userRepository.findById(userId).get();
     }
 
-    @GetMapping("/add") // Map ONLY GET Requests
+    @GetMapping("/add")
     public @ResponseBody
     String addNewUser(@RequestParam String name,
             @RequestParam String email) {
-        // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
-
         User n = new User();
         n.setUsername(name);
         n.setEmail(email);

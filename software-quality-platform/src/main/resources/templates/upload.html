@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head th:include="fragments/head :: head">
+        <title id="pageTitle">STORM Review Platform</title>
+    </head>
+    <body>
+        <link href="/css/code/upload.css" rel="stylesheet" type="text/css">
+        <div th:replace="fragments/header :: header"></div>
+        <section id="connect">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-12 mx-auto">
+                        <h2 id="upload">Upload your code here for review</h2>
+                        <div class="pushCodeFirstStep">
+                            <div class="col-lg-12">
+                                <input type="file" class="form-control-file" id="fileSelector"/>
+                            </div>
+                            <div class="col-lg-12">
+                                <label for="tag">Add Tags</label>
+                            </div>
+                            <div class="col-lg-12">
+                                <input type="text" class="form-control" id="tags" placeholder="Add tags here"/>
+                            </div>                     
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-primary" id="uploadBtn">Upload</button>
+                            </div>   
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="width: 60%!important;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Upload File</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="fileContent"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="pushButton">Push</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments/footer :: footer"></div>
+        <script src="/js/code/upload.js"></script>
+    </body>
+</html>

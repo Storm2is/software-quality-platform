@@ -11,6 +11,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -39,24 +42,26 @@ public class File {
     @Column(name = "pushTime")
     private Timestamp pushTime;
 
-    @Column(name = "userId")
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
 
-    @Column(name = "statusId")
-    private Integer statusId;
+    @OneToOne
+    @JoinColumn(name = "statusId")
+    private Status status;
 
     public File() {
     }
 
     // Id is auto generated
-    public File(String fileName, String extension, String filePath, String tags, Timestamp pushTime, Integer userId, Integer statusId) {
+    public File(String fileName, String extension, String filePath, String tags, Timestamp pushTime, Status status, User user) {
         this.fileName = fileName;
         this.extension = extension;
         this.filePath = filePath;
         this.tags = tags;
         this.pushTime = pushTime;
-        this.userId = userId;
-        this.statusId = statusId;
+        this.status = status;
+        this.user = user;
     }
 
     public Integer getFileId() {
@@ -107,20 +112,19 @@ public class File {
         this.pushTime = pushTime;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    public Integer getStatusId() {
-        return statusId;
+    public User getUser() {
+        return user;
     }
 
-    public void setStatusId(Integer statusId) {
-        this.statusId = statusId;
+    public void setUser(User user) {
+        this.user = user;
     }
-
 }

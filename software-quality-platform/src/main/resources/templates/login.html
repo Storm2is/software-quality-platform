@@ -1,0 +1,44 @@
+<html lang="en">
+    <head th:include="fragments/head :: head">
+        <title id="pageTitle">STORM Review Platform</title>
+    </head>
+
+    <body id="page-top">
+        <div th:replace="fragments/header :: header"></div>
+        <header class="bg-primary text-white">
+            <div class="container text-center">
+                <h1>Welcome to <b>Storm</b> Review Platform</h1>
+                <p class="lead">Because Code Reviews can be Fun too !</p>
+            </div>
+        </header>
+
+        <section id="connect">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 mx-auto">
+                        <h2 class="text-divider text-center"><span id="app">{{message}}</span></h2>
+                        <div id = app4 class="row justify-content-center avatars">
+                            <div  v-for = "user in info" class="col-md-4 animate zoom">
+                                <p>
+                                    <a href="/code/upload">
+                                        <img v-bind:title=user.username v-bind:alt=user.username v-bind:src="'img/' + user.id + '.png'" />
+                                    </a>
+                                </p>
+                                <div class="middle">
+                                    <div class="text">
+                                        <a href="/code/upload">{{user.username}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <div th:replace="fragments/footer :: footer"></div>
+        <script src="/js/common/scrolling-nav.js"></script>
+        <script src="/js/common/vue.js"></script>
+    </body>
+</html>
