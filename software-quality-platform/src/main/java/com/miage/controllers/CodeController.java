@@ -81,6 +81,7 @@ public class CodeController {
         f.setFileName(file.getOriginalFilename());
         f.setExtension(file.getContentType());
         f.setTags(tags);
+        f.setFileLength(0);
         f.setFilePath(System.getProperty("user.dir") + "/" + env.getProperty("storage.localfolder") + "/" + file.getOriginalFilename());
         fileRepository.save(f);
         //sendNotification(f.getFileName());

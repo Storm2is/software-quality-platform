@@ -1,0 +1,45 @@
+<html lang="en">
+    <head th:include="fragments/head :: head">
+        <title id="pageTitle">STORM Review Platform</title>
+    </head>
+    <body id="page-top">
+        <div th:replace="fragments/header :: header"></div>
+
+        <section id="connect">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-12 mx-auto">
+                        <h2 id="upload">Review code:</h2>
+                        <form id="submitReviewForm" method="POST">
+                            <input type="hidden" name="fileId" id="fileId" th:value="${model.fileId}">
+                            <input type="hidden" name="reviewerId" id="reviewerId" th:value="${model.reviewerId}">
+                            <div class="row">
+                                <div class="col-md-8" th:object="${model}">
+                                    <div class="form-group">
+                                        <label for="originalCode">Original Code</label>
+                                        <textarea style="white-space: nowrap;" class="form-control" name="originContent" id="originalCode" th:field="*{originContent}"  rows="20" col="500"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="annotations">Reviewer Annotations</label>
+                                        <textarea style="white-space: nowrap;" class="form-control" name="annotations" id="annotations" rows = "20"  col="500"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 justify-content-center">
+                                <button class="btn btn-primary" id="submitReviewBtn" type="button" name="validate" value="validate">Validate</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <link href="/css/review/jquery.numberedtextarea.css" rel="stylesheet" type="text/css"/>
+        <script src="/js/review/jquery.numberedtextarea.js"></script>
+        <script src="/js/review/review.js"></script>
+
+        <div th:replace="fragments/footer :: footer"></div>
+    </body>
+</html>

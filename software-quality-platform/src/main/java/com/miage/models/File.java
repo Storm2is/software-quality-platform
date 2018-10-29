@@ -36,6 +36,9 @@ public class File {
     @Column(name = "filePath")
     private String filePath;
 
+    @Column(name = "fileLength")
+    private Integer fileLength;
+
     @Column(name = "tags")
     private String tags;
 
@@ -126,5 +129,13 @@ public class File {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Integer getFileLength() {
+        return fileLength;
+    }
+
+    public void setFileLength(Integer fileLength) {
+        this.fileLength = fileLength;
     }
 }

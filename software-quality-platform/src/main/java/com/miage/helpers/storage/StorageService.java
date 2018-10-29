@@ -39,7 +39,9 @@ public class StorageService implements IStorageService {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
             }
-            Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
+            if (!Files.exists(this.rootLocation.resolve(file.getOriginalFilename()))) {
+                Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
+            }
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + file.getOriginalFilename(), e);
         }
@@ -86,7 +88,9 @@ public class StorageService implements IStorageService {
     @Override
     public void init() {
         try {
-            Files.createDirectory(rootLocation);
+            if (!Files.exists(rootLocation)) {
+                Files.createDirectory(rootLocation);
+            }
         } catch (IOException e) {
             throw new StorageException("Could not initialize storage", e);
         }
