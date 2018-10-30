@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Objects;
 import javax.mail.MessagingException;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -135,6 +136,21 @@ public class CodeController {
         model.addAttribute("files", fileRepository.findAll());
         return "files";
     }
+    
+    
+    @GetMapping("/files/{UserID}")
+    public String getUserFiles(Model model, @PathVariable Integer UserID) {
+        for (File file:fileRepository.findAll())
+        {
+            if (Objects.equals(file.getUser().getId(), UserID))
+            {
+                model.addAttribute("files", file);
+            }
+        }
+        return "filesOwner";
+    }
+
+    
     /*
 
     private void sendNotification(String fName) throws MessagingException {
