@@ -1,5 +1,6 @@
 package com.miage.controllers;
 
+import com.miage.services.NotificationService;
 import com.miage.repositories.FileRepository;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,9 @@ public class CodeController {
 
     @Autowired
     private StatusRepository statusRepository;
+    
+    @Autowired
+    NotificationService notificationService;
 
     private final IStorageService storageService;
 
@@ -59,7 +63,7 @@ public class CodeController {
     public CodeController(IStorageService storageService) {
         this.storageService = storageService;
     }
-
+    
     @GetMapping("/upload")
     public String uploadPage(Model model) throws IOException {
         model.addAttribute("files", fileRepository.findAll());
@@ -97,7 +101,7 @@ public class CodeController {
         f.setFileLength(lines);
 
         f.setFilePath(System.getProperty("user.dir") + "/" + env.getProperty("storage.localfolder") + "/" + file.getOriginalFilename());
-        fileRepository.save(f);
+        fileRepository.save(f);        
         //sendNotification(f.getFileName());
         return new ResponseEntity<File>(f, HttpStatus.OK);
     }
@@ -110,6 +114,7 @@ public class CodeController {
         f.setUser(userRepository.findById(file.getUserid()).get());
         f.setPushTime(new Timestamp(new Date().getTime()));
         fileRepository.save(f);
+        notificationService.newCodeUploaded(file.getUserid(), f.getFileName() );
         return "/files/all";
     }
 
@@ -154,22 +159,6 @@ public class CodeController {
 
     
     /*
-
-    private void sendNotification(String fName) throws MessagingException {
-        ArrayList<String> to = new ArrayList<>();
-        userRepository.findAll().forEach(user -> to.add(user.getEmail())); //Populate list of recepicents
-        String fileName = fName; //Need file name
-        String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date());
-        String username = null; //userRepository.findById(0).get().getUsername() Substitute ID        
-        String subjectMsg = "New code avalible";
-        String link = "<a href='www.google.com'>link</a>";
-        String bodyMsg = "User " + username + " at " + timeStamp
-                + " added a new code file " + fileName
-                + " into the platform."
-                + "\n To get access check this " + link;
-        EmailNotificationHelper.generateAndSendEmail(subjectMsg, bodyMsg, to);
-    }
-
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {

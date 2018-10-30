@@ -60,7 +60,7 @@ CREATE TABLE `file` (
   `fileId` int(11) NOT NULL,
   `fileName` varchar(30) NOT NULL,
   `extension` varchar(10) NOT NULL,
-  `filePath` varchar(100) NOT NULL,
+  `filePath` varchar(500) NOT NULL,
   `fileLength` int(7) NOT NULL,
   `tags` varchar(100) NOT NULL,
   `pushTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

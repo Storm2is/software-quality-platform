@@ -12,10 +12,13 @@ import com.miage.repositories.AnnotationRepository;
 import com.miage.repositories.FileRepository;
 import com.miage.repositories.StatusRepository;
 import com.miage.repositories.UserRepository;
+import com.miage.services.NotificationService;
 import com.miage.viewmodels.AnnotationViewModel;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +52,10 @@ public class ReviewController {
 
     @Autowired
     private AnnotationRepository annotationRepository;
-
+    
+    @Autowired
+    private NotificationService notificationService;
+    
     private final IStorageService storageService;
 
     @Autowired
@@ -109,6 +115,7 @@ public class ReviewController {
                         annotation.setLineNb(lineNb);
                         annotation.setIsResolved(Boolean.FALSE);
                         annotation.setComment(line.split(String.valueOf(lineNb))[1]);
+                        annotation.setTime(new Timestamp(new Date().getTime()));
                         annotationRepository.save(annotation);
                     }
                 }
@@ -120,9 +127,11 @@ public class ReviewController {
             annotation.setIsResolved(Boolean.FALSE);
             annotation.setComment(model.getAnnotations());
             annotation.setLineNb(-1);
+            annotation.setTime(new Timestamp(new Date().getTime()));
             annotationRepository.save(annotation);
         }
-
+        
+        notificationService.codeAnnotated(model.getReviewerId(), model.getFileId());
         return "/code/files";
     }
 }
