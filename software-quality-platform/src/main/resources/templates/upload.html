@@ -31,6 +31,29 @@ and open the template in the editor.
                             </div>   
 
                         </div>
+                        <table class='table'>
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Owner</th>
+                                    <th>Tags</th>
+                                    <th>Push Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="file, rowStat: ${files}"
+                                    th:class="${file.status.statusName} == 'Accepted' ? 'table-success' : ''">
+                                    <td th:text="${file.fileId}"></td>
+                                    <td th:text="${file.fileName}"></td>
+                                    <td th:text="${file.status.statusName}"></td>
+                                    <td th:text="${file.user.Username}"></td>
+                                    <td th:text="${file.tags}"></td>
+                                    <td th:text="${file.pushTime}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

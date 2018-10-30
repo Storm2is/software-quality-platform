@@ -138,16 +138,18 @@ public class CodeController {
     }
     
     
-    @GetMapping("/files/{UserID}")
-    public String getUserFiles(Model model, @PathVariable Integer UserID) {
+    @GetMapping("/upload/{userId}")
+    public String getUserFiles(Model model, @PathVariable Integer userId) {
         for (File file:fileRepository.findAll())
         {
-            if (Objects.equals(file.getUser().getId(), UserID))
+            if (Objects.equals(file.getUser().getId(), userId))
             {
                 model.addAttribute("files", file);
             }
         }
-        return "filesOwner";
+
+        return "upload";
+
     }
 
     
