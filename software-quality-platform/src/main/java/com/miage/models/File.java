@@ -35,7 +35,7 @@ public class File {
 
     @Column(name = "filePath")
     private String filePath;
-
+    
     @Column(name = "fileLength")
     private Integer fileLength;
 
@@ -57,10 +57,11 @@ public class File {
     }
 
     // Id is auto generated
-    public File(String fileName, String extension, String filePath, String tags, Timestamp pushTime, Status status, User user) {
+    public File(String fileName, String extension, String filePath,Integer fileLength,String tags, Timestamp pushTime, Status status, User user) {
         this.fileName = fileName;
         this.extension = extension;
         this.filePath = filePath;
+        this.fileLength = fileLength;
         this.tags = tags;
         this.pushTime = pushTime;
         this.status = status;
@@ -99,6 +100,14 @@ public class File {
         this.filePath = filePath;
     }
 
+    public Integer getFileLength() {
+        return fileLength;
+    }
+
+    public void setFileLength(Integer fileLength) {
+        this.fileLength = fileLength;
+    }
+
     public String getTags() {
         return tags;
     }
@@ -131,11 +140,4 @@ public class File {
         this.user = user;
     }
 
-    public Integer getFileLength() {
-        return fileLength;
-    }
-
-    public void setFileLength(Integer fileLength) {
-        this.fileLength = fileLength;
-    }
 }

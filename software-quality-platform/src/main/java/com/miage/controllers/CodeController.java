@@ -18,7 +18,9 @@ import com.miage.repositories.StatusRepository;
 import com.miage.repositories.UserRepository;
 import com.miage.viewmodels.FileViewModel;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.FileReader;
+import java.io.LineNumberReader;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.mail.MessagingException;
@@ -73,7 +75,7 @@ public class CodeController {
     public ResponseEntity<File> uploadCodeHandler(
             @RequestParam("file") MultipartFile file,
             @RequestParam("tags") String tags,
-            RedirectAttributes redirectAttributes) throws MessagingException {
+            RedirectAttributes redirectAttributes) throws MessagingException,IOException{
 
         storageService.store(file);
 
@@ -81,7 +83,18 @@ public class CodeController {
         f.setFileName(file.getOriginalFilename());
         f.setExtension(file.getContentType());
         f.setTags(tags);
-        f.setFileLength(0);
+
+        // try to get the number of line from file objectt
+        // lenght = fgdgdfgdfg
+        FileReader fr = new FileReader(System.getProperty("user.dir") + "/" + env.getProperty("storage.localfolder") + "/" + file.getOriginalFilename());
+        LineNumberReader lnr = new LineNumberReader(fr);
+        int lines = 0;
+        while (lnr.readLine() != null){
+    	    lines++;
+    	}
+        lnr.close();
+        f.setFileLength(lines);
+
         f.setFilePath(System.getProperty("user.dir") + "/" + env.getProperty("storage.localfolder") + "/" + file.getOriginalFilename());
         fileRepository.save(f);
         //sendNotification(f.getFileName());
