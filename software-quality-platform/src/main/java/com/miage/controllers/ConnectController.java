@@ -8,6 +8,9 @@ package com.miage.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  *
@@ -17,12 +20,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ConnectController {
 
     @GetMapping("/")
-    public String connect(Model model) {
+    public String index(Model model) {
         return "login";
     }
 
-    @GetMapping("/disconnect")
-    public String disconnect(Model model) {
-        return "disconnect";
+    @GetMapping("/login")
+    public String login(Model model) {
+        return "login";
     }
 }

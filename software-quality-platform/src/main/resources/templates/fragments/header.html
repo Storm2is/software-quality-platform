@@ -6,32 +6,32 @@
         </button>
 
         <!-- IF CUSTOMER IS ANONYMOUS -->
-        <div th:if="${username == null}">
+        <div th:if="${#httpServletRequest.remoteUser == null}">
             <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#connect">Connect</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#discontact">Disconnect</a>
-                    </li>
 
-                </ul>
             </div>
         </div>
         <!-- ELSE -->
-        <div th:unless="${username == null}">
+        <div th:unless="${#httpServletRequest.remoteUser == null}">
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" id='username' th:attr="value1=${username},value2=${userid}" th:text=" 'Bonjour ' + ${username} + '  !!! :) '">Bonjour!</a>
+                        <a class="nav-link js-scroll-trigger" id='username' th:attr="value=${#httpServletRequest.remoteUser}" th:text=" 'Bonjour ' + ${#httpServletRequest.remoteUser}">Bonjour!</a>
                     </li>
-					<li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/code/files">Review Code</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#discontact">Disconnect</a>
+                        <a class="nav-link js-scroll-trigger logout" >Disconnect</a>
                     </li>
+                    <script>
+                        $('.logout').on('click', function () {
+                            $.post('/logout', null).done(function (data) {
+                                window.location.href = "/"
+                            });
+                            ;
+                        });
+                    </script>
                 </ul>
             </div>
 

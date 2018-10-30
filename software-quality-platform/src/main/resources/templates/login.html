@@ -20,13 +20,13 @@
                         <div id = app4 class="row justify-content-center avatars">
                             <div  v-for = "user in info" class="col-md-4 animate zoom">
                                 <p>
-                                    <a href="/code/upload">
+                                    <a class="loginBtn" v-bind:value="user.username">
                                         <img v-bind:title=user.username v-bind:alt=user.username v-bind:src="'img/' + user.id + '.png'" />
                                     </a>
                                 </p>
                                 <div class="middle">
                                     <div class="text">
-                                        <a href="/code/upload">{{user.username}}</a>
+                                        <a class="loginBtn" v-bind:value="user.username">{{user.username}}</a>
                                     </div>
                                 </div>
                             </div>
@@ -40,5 +40,6 @@
         <div th:replace="fragments/footer :: footer"></div>
         <script src="/js/common/scrolling-nav.js"></script>
         <script src="/js/common/vue.js"></script>
+        <script src="/js/common/login.js"></script>
     </body>
 </html>

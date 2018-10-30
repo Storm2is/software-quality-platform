@@ -29,6 +29,8 @@ import javax.mail.MessagingException;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +52,7 @@ public class CodeController {
 
     @Autowired
     private StatusRepository statusRepository;
-    
+
     @Autowired
     NotificationService notificationService;
 
@@ -63,7 +65,7 @@ public class CodeController {
     public CodeController(IStorageService storageService) {
         this.storageService = storageService;
     }
-    
+
     @GetMapping("/upload")
     public String uploadPage(Model model) throws IOException {
         model.addAttribute("files", fileRepository.findAll());
@@ -80,7 +82,7 @@ public class CodeController {
     public ResponseEntity<File> uploadCodeHandler(
             @RequestParam("file") MultipartFile file,
             @RequestParam("tags") String tags,
-            RedirectAttributes redirectAttributes) throws MessagingException,IOException{
+            RedirectAttributes redirectAttributes) throws MessagingException, IOException {
 
         storageService.store(file);
 
@@ -94,14 +96,14 @@ public class CodeController {
         FileReader fr = new FileReader(System.getProperty("user.dir") + "/" + env.getProperty("storage.localfolder") + "/" + file.getOriginalFilename());
         LineNumberReader lnr = new LineNumberReader(fr);
         int lines = 0;
-        while (lnr.readLine() != null){
-    	    lines++;
-    	}
+        while (lnr.readLine() != null) {
+            lines++;
+        }
         lnr.close();
         f.setFileLength(lines);
 
         f.setFilePath(System.getProperty("user.dir") + "/" + env.getProperty("storage.localfolder") + "/" + file.getOriginalFilename());
-        fileRepository.save(f);        
+        fileRepository.save(f);
         //sendNotification(f.getFileName());
         return new ResponseEntity<File>(f, HttpStatus.OK);
     }
@@ -109,12 +111,14 @@ public class CodeController {
     @PostMapping("/push")
     @ResponseBody
     public String pushCode(@RequestBody FileViewModel file) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         File f = fileRepository.findById(file.getFileid()).get();
         f.setStatus(statusRepository.findById(1).get());
-        f.setUser(userRepository.findById(file.getUserid()).get());
+        f.setUser(userRepository.findByName(username));
         f.setPushTime(new Timestamp(new Date().getTime()));
         fileRepository.save(f);
-        notificationService.newCodeUploaded(file.getUserid(), f.getFileName() );
+        notificationService.newCodeUploaded(file.getUserid(), f.getFileName());
         return "/files/all";
     }
 
@@ -141,14 +145,11 @@ public class CodeController {
         model.addAttribute("files", fileRepository.findAll());
         return "files";
     }
-    
-    
+
     @GetMapping("/upload/{userId}")
     public String getUserFiles(Model model, @PathVariable Integer userId) {
-        for (File file:fileRepository.findAll())
-        {
-            if (Objects.equals(file.getUser().getId(), userId))
-            {
+        for (File file : fileRepository.findAll()) {
+            if (Objects.equals(file.getUser().getId(), userId)) {
                 model.addAttribute("files", file);
             }
         }
@@ -157,7 +158,6 @@ public class CodeController {
 
     }
 
-    
     /*
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
