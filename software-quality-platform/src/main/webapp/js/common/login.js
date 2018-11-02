@@ -5,8 +5,7 @@
  */
 
 
-$(document).ready(function () {
-    $('.loginBtn').on('click', function () {
+$(document).on('click','.loginBtn', function () {
         var username = $(this).attr("value");
         var password = $(this).attr("value");
         var data = {
@@ -18,4 +17,3 @@ $(document).ready(function () {
         });
         ;
     });
-});

@@ -18,12 +18,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -133,5 +138,25 @@ public class ReviewController {
         
         notificationService.codeAnnotated(model.getReviewerId(), model.getFileId());
         return "/code/files";
+    }
+    
+    // Display list of files for reviewer in the file.htlm page (exclude the owner's files)
+    @GetMapping("/{userId}")
+    public String getAllFile(Model model, @PathVariable Integer userId) {
+        
+        List <File> results = new ArrayList<>();
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "pushTime"));
+        
+        for (File file:fileRepository.findAll(sort))
+        {
+            if (!Objects.equals(file.getUser().getId(), userId))
+            {
+                results.add(file);
+                System.out.println(file.getPushTime());
+            }
+        }
+        model.addAttribute("files", results);
+        
+        return "files";
     }
 }
