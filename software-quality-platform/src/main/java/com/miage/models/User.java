@@ -12,7 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -37,6 +39,10 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @OneToOne
+    @JoinColumn(name = "userId")
+    private Point point;
+
     public User() {
         this.Username = "";
         this.email = "";
@@ -44,10 +50,19 @@ public class User {
     }
 
     // Id is auto generated
-    public User(String Username, String email, String password) {
+    public User(String Username, String email, String password, Point point) {
         this.Username = Username;
         this.email = email;
         this.password = password;
+        this.point = point;
+    }
+
+    public Point getPoint() {
+        return point;
+    }
+
+    public void setPoint(Point point) {
+        this.point = point;
     }
 
     public Integer getId() {

@@ -30,6 +30,8 @@ DROP TABLE IF EXISTS file;
 DROP TABLE IF EXISTS filelog;
 DROP TABLE IF EXISTS status;
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS point;
+DROP TABLE IF EXISTS level_reference;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -107,6 +109,17 @@ CREATE TABLE `user` (
   `username` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `point` 
+( 
+`userId` INT NOT NULL , 
+`value` INT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `level_reference` 
+( `id` INT NOT NULL , 
+`name` VARCHAR(100) NOT NULL , 
+`value` INT NOT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 --
 -- Indexes for dumped tables
 --
@@ -126,6 +139,12 @@ ALTER TABLE `file`
   ADD PRIMARY KEY (`fileId`),
   ADD KEY `userId` (`userId`),
   ADD KEY `statusId` (`statusId`);
+
+ALTER TABLE `point`
+  ADD PRIMARY KEY (`userid`);
+
+ALTER TABLE `level_reference`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `filelog`
@@ -185,8 +204,8 @@ ALTER TABLE `annotation`
 -- Constraints for table `file`
 --
 ALTER TABLE `file`
-  ADD CONSTRAINT `files_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`),
-  ADD CONSTRAINT `files_ibfk_2` FOREIGN KEY (`statusId`) REFERENCES `status` (`statusId`);
+  ADD CONSTRAINT `file_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`),
+  ADD CONSTRAINT `file_ibfk_2` FOREIGN KEY (`statusId`) REFERENCES `status` (`statusId`);
 
 --
 -- Constraints for table `filelog`
@@ -198,3 +217,7 @@ ALTER TABLE `filelog`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+ALTER TABLE `point`
+  ADD CONSTRAINT `point_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
+

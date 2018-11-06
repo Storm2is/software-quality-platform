@@ -27,3 +27,15 @@ INSERT INTO `annotation` (`annotationId`, `lineNb`, `comment`, `time`, `isResolv
 INSERT INTO `filelog` (`userId`, `fileId`, `accessed`, `reviewed`) VALUES
 (3, 1, '2018-10-01 09:00:00', '2018-10-01 13:00:00');
 
+INSERT INTO `point` (`userId`, `value`) VALUES 
+(1, 110), 
+(2, 150),
+(3, 233),
+(4, 245),
+(5, 270),
+(6, 360);
+
+INSERT INTO `level_reference` (`id`, `name`, `value`) VALUES 
+(1, 'NOVICE', 100), 
+(2, 'INTERMEDIATE', 250),
+(3, 'MASTER', 400);

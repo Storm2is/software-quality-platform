@@ -1,5 +1,6 @@
 package com.miage.controllers;
 
+import com.miage.enums.GainRules;
 import com.miage.services.NotificationService;
 import com.miage.repositories.FileRepository;
 import java.io.IOException;
@@ -15,8 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.miage.helpers.storage.IStorageService;
 import com.miage.models.File;
+import com.miage.models.Point;
+import com.miage.models.User;
 import com.miage.repositories.StatusRepository;
 import com.miage.repositories.UserRepository;
+import com.miage.services.PointsService;
 import com.miage.viewmodels.FileViewModel;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,6 +62,9 @@ public class CodeController {
 
     @Autowired
     NotificationService notificationService;
+
+    @Autowired
+    PointsService pointService;
 
     private final IStorageService storageService;
 
@@ -116,12 +123,14 @@ public class CodeController {
     public String pushCode(@RequestBody FileViewModel file) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
+        User owner = userRepository.findByName(username);
         File f = fileRepository.findById(file.getFileid()).get();
         f.setStatus(statusRepository.findById(1).get());
-        f.setUser(userRepository.findByName(username));
+        f.setUser(owner);
         f.setPushTime(new Timestamp(new Date().getTime()));
         fileRepository.save(f);
-        notificationService.newCodeUploaded(file.getUserid(), f.getFileName());
+        //notificationService.newCodeUploaded(file.getUserid(), f.getFileName());
+        pointService.increasePoints(owner, GainRules.OWNER_UPLOAD);
         return "/files/all";
     }
 
@@ -151,20 +160,18 @@ public class CodeController {
 
     @GetMapping("/upload/{userId}")
     public String getUserFiles(Model model, @PathVariable Integer userId) {
-        List <File> results = new ArrayList<>();
+        List<File> results = new ArrayList<>();
 
-        for (File file:fileRepository.findAll())
-        {
-            if (Objects.equals(file.getUser().getId(), userId))
-            {
+        for (File file : fileRepository.findAll()) {
+            if (Objects.equals(file.getUser().getId(), userId)) {
                 results.add(file);
             }
         }
         model.addAttribute("files", results);
-        
+
         return "upload";
     }
-    
+
     /*
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
