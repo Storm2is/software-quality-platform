@@ -31,3 +31,5 @@ section {
     margin: auto;
     display: block;
 }
+
+a { cursor: pointer; }

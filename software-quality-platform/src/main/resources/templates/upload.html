@@ -10,53 +10,71 @@ and open the template in the editor.
     </head>
     <body>
         <link href="/css/code/upload.css" rel="stylesheet" type="text/css">
+        <link href="/css/common/choose-file.css" rel="stylesheet" type="text/css">
+
         <div th:replace="fragments/header :: header"></div>
         <section id="connect">
             <div class="container">
+
+                <div class="row justify-content-center  uplaod">
+
+
+                    <div class="col-lg-12 mx-auto">
+                        <div class="card">
+                            <h5 class="card-header">Your files:</h5>
+
+                            <div class="card-body">
+                                <table class='table table-bordered table-hover'>
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Owner</th>
+                                            <th>Tags</th>
+                                            <th>Push Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="file, rowStat: ${files}"
+                                            th:class="${file.status.statusName} == 'Accepted' ? 'table-success' : ''">
+                                            <td th:text="${file.fileId}"></td>
+                                            <td th:text="${file.fileName}"></td>
+                                            <td th:text="${file.status.statusName}"></td>
+                                            <td th:text="${file.user.Username}"></td>
+                                            <td th:text="${file.tags}"></td>
+                                            <td th:text="${file.pushTime}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row justify-content-center">
                     <div class="col-lg-12 mx-auto">
-                        <h2 id="upload">Upload your code here for review</h2>
-                        <div class="pushCodeFirstStep">
-                            <div class="col-lg-12">
-                                <input type="file" class="form-control-file" id="fileSelector"/>
-                            </div>
-                            <div class="col-lg-12">
-                                <label for="tag">Add Tags</label>
-                            </div>
-                            <div class="col-lg-12">
-                                <input type="text" class="form-control" id="tags" placeholder="Add tags here"/>
-                            </div>                     
-                            <div class="col-lg-12">
-                                <button type="button" class="btn btn-primary" id="uploadBtn">Upload</button>
-                            </div>   
+                        <div class="card">
+                            <h5 class="card-header">Uplaod a new file!</h5>
 
+                            <div class="card-body">
+                                <div class="pushCodeFirstStep">
+                                    <div class="file-upload">
+                                        <div class="file-select">
+                                            <div class="file-select-button" id="fileName">Choose File</div>
+                                            <div class="file-select-name" id="noFile">No file chosen...</div>
+                                            <input type="file" name="chooseFile" class="form-control-file" id="fileSelector"/>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control" id="tags" placeholder="Add tags here"/>
+                                    <button type="button" class="btn btn-primary" id="uploadBtn">Upload</button>
+                                </div>
+                            </div>
                         </div>
-                        <table class='table'>
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Status</th>
-                                    <th>Owner</th>
-                                    <th>Tags</th>
-                                    <th>Push Time</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="file, rowStat: ${files}"
-                                    th:class="${file.status.statusName} == 'Accepted' ? 'table-success' : ''">
-                                    <td th:text="${file.fileId}"></td>
-                                    <td th:text="${file.fileName}"></td>
-                                    <td th:text="${file.status.statusName}"></td>
-                                    <td th:text="${file.user.Username}"></td>
-                                    <td th:text="${file.tags}"></td>
-                                    <td th:text="${file.pushTime}"></td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
+
         </section>
         <!-- Modal -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -64,7 +82,7 @@ and open the template in the editor.
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Upload File</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -78,6 +96,19 @@ and open the template in the editor.
             </div>
         </div>
         <div th:replace="fragments/footer :: footer"></div>
+        <script>
+            $('#fileSelector').bind('change', function () {
+                var filename = $("#chooseFile").val();
+                if (/^\s*$/.test(filename)) {
+                    $(".file-upload").removeClass('active');
+                    $("#noFile").text("No file chosen...");
+                } else {
+                    $(".file-upload").addClass('active');
+                    $("#noFile").text(filename.replace("C:\\fakepath\\", ""));
+                }
+            });
+        </script>
+
         <script src="/js/code/upload.js"></script>
     </body>
 </html>
