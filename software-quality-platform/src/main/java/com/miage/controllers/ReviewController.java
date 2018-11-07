@@ -137,7 +137,7 @@ public class ReviewController {
                 }
             }
             pointService.decreasePointsByValue(file.getUser(), LoseRules.OWNER_ANNOTATE, annotationsNb * 2);
-            pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE);
+            pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE,file);
             pointService.increasePointsByValue(reviewer, GainRules.REVIEWER_VALIDATE, annotationsNb * 2);
 
             Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -145,9 +145,9 @@ public class ReviewController {
             Date date2 = new Date(file.getPushTime().getTime());
             boolean moreThanDay = Math.abs(date1.getTime() - date2.getTime()) > MILLIS_PER_DAY;
             if (!moreThanDay) {
-                pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE_IN_24);
+                pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE_IN_24,file);
             } else {
-                pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE_IN_48);
+                pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE_IN_48,file);
             }
 
         } else {
@@ -161,7 +161,7 @@ public class ReviewController {
             annotation.setLineNb(-1);
             annotation.setTime(new Timestamp(new Date().getTime()));
             annotationRepository.save(annotation);
-            pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE);
+            pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE,file);
         }
 
         notificationService.codeAnnotated(model.getReviewerId(), model.getFileId());
@@ -178,7 +178,6 @@ public class ReviewController {
         for (File file : fileRepository.findAll(sort)) {
             if (!Objects.equals(file.getUser().getId(), userId)) {
                 results.add(file);
-                System.out.println(file.getPushTime());
             }
         }
         model.addAttribute("files", results);

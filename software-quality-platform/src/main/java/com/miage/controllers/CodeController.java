@@ -34,7 +34,6 @@ import java.util.Objects;
 import javax.mail.MessagingException;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -130,7 +129,7 @@ public class CodeController {
         f.setPushTime(new Timestamp(new Date().getTime()));
         fileRepository.save(f);
         //notificationService.newCodeUploaded(file.getUserid(), f.getFileName());
-        pointService.increasePoints(owner, GainRules.OWNER_UPLOAD);
+        pointService.increasePoints(owner, GainRules.OWNER_UPLOAD,f);
         return "/files/all";
     }
 

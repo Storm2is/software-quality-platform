@@ -11,4 +11,6 @@ package com.miage.enums;
  */
 public enum LoseRules {
     OWNER_ANNOTATE,
+    REVIEWER_LATE,
+    REVIEWER_NONE,
 }
