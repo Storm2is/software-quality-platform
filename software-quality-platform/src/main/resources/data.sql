@@ -34,8 +34,3 @@ INSERT INTO `point` (`userId`, `value`) VALUES
 (4, 245),
 (5, 270),
 (6, 360);
-
-INSERT INTO `level_reference` (`id`, `name`, `value`) VALUES 
-(1, 'NOVICE', 100), 
-(2, 'INTERMEDIATE', 250),
-(3, 'MASTER', 400);

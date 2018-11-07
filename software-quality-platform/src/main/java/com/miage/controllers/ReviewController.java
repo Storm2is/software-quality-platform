@@ -114,7 +114,6 @@ public class ReviewController {
         // process line by line based on # then number
         if (model.getAnnotations().startsWith("#")) {
             String[] content = model.getAnnotations().split("#");
-            System.out.println("content:" + model.getAnnotations());
             User reviewer = userRepository.findById(model.getReviewerId()).get();
             File file = fileRepository.findById(model.getFileId()).get();
             Integer annotationsNb = 0;
@@ -137,7 +136,7 @@ public class ReviewController {
                 }
             }
             pointService.decreasePointsByValue(file.getUser(), LoseRules.OWNER_ANNOTATE, annotationsNb * 2);
-            pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE,file);
+            pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE, file);
             pointService.increasePointsByValue(reviewer, GainRules.REVIEWER_VALIDATE, annotationsNb * 2);
 
             Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -145,9 +144,9 @@ public class ReviewController {
             Date date2 = new Date(file.getPushTime().getTime());
             boolean moreThanDay = Math.abs(date1.getTime() - date2.getTime()) > MILLIS_PER_DAY;
             if (!moreThanDay) {
-                pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE_IN_24,file);
+                pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE_IN_24, file);
             } else {
-                pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE_IN_48,file);
+                pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE_IN_48, file);
             }
 
         } else {
@@ -161,7 +160,7 @@ public class ReviewController {
             annotation.setLineNb(-1);
             annotation.setTime(new Timestamp(new Date().getTime()));
             annotationRepository.save(annotation);
-            pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE,file);
+            pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE, file);
         }
 
         notificationService.codeAnnotated(model.getReviewerId(), model.getFileId());

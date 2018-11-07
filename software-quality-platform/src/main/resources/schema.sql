@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.8.3
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 05, 2018 at 03:22 PM
--- Server version: 10.1.10-MariaDB
--- PHP Version: 5.6.19
+-- Generation Time: Nov 07, 2018 at 09:13 PM
+-- Server version: 10.1.36-MariaDB
+-- PHP Version: 7.2.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -17,26 +19,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `storm`
+-- Database: `test2`
 --
 
 -- --------------------------------------------------------
-
-
-SET FOREIGN_KEY_CHECKS = 0;
-
-DROP TABLE IF EXISTS annotation;
-DROP TABLE IF EXISTS file;
-DROP TABLE IF EXISTS filelog;
-DROP TABLE IF EXISTS status;
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS point;
-DROP TABLE IF EXISTS level_reference;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
-
-
 
 --
 -- Table structure for table `annotation`
@@ -44,13 +30,13 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `annotation` (
   `annotationId` int(11) NOT NULL,
-  `lineNb` int(11) NOT NULL,
-  `comment` varchar(300) NOT NULL,
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `isResolved` tinyint(1) NOT NULL,
+  `fileId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `fileId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `comment` varchar(1000) COLLATE latin1_bin NOT NULL,
+  `lineNb` int(11) DEFAULT NULL,
+  `time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `isResolved` tinyint(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 -- --------------------------------------------------------
 
@@ -60,28 +46,26 @@ CREATE TABLE `annotation` (
 
 CREATE TABLE `file` (
   `fileId` int(11) NOT NULL,
-  `fileName` varchar(30) NOT NULL,
-  `extension` varchar(10) NOT NULL,
-  `filePath` varchar(500) NOT NULL,
-  `fileLength` int(7) NOT NULL,
-  `tags` varchar(100) NOT NULL,
-  `pushTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `userId` int(11) DEFAULT NULL,
-  `statusId` int(11) NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `fileName` varchar(1000) COLLATE latin1_bin DEFAULT NULL,
+  `filePath` varchar(1000) COLLATE latin1_bin NOT NULL,
+  `extension` varchar(10) COLLATE latin1_bin DEFAULT NULL,
+  `tags` varchar(1000) COLLATE latin1_bin DEFAULT NULL,
+  `pushTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `fileLength` int(11) DEFAULT NULL,
+  `statusId` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `filelog`
+-- Table structure for table `point`
 --
 
-CREATE TABLE `filelog` (
+CREATE TABLE `point` (
   `userId` int(11) NOT NULL,
-  `fileId` int(11) NOT NULL,
-  `accessed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `reviewed` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `value` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 -- --------------------------------------------------------
 
@@ -91,8 +75,8 @@ CREATE TABLE `filelog` (
 
 CREATE TABLE `status` (
   `statusId` int(11) NOT NULL,
-  `statusName` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `statusName` varchar(100) COLLATE latin1_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 -- --------------------------------------------------------
 
@@ -102,24 +86,14 @@ CREATE TABLE `status` (
 
 CREATE TABLE `user` (
   `userId` int(11) NOT NULL,
-  `firstName` varchar(50) NOT NULL,
-  `lastName` varchar(50) NOT NULL,
-  `phone` varchar(15) NOT NULL,
-  `email` varchar(30) NOT NULL,
-  `username` varchar(15) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `username` varchar(100) COLLATE latin1_bin NOT NULL,
+  `password` varchar(100) COLLATE latin1_bin DEFAULT NULL,
+  `firstName` varchar(100) COLLATE latin1_bin NOT NULL,
+  `lastName` varchar(100) COLLATE latin1_bin NOT NULL,
+  `phone` varchar(100) COLLATE latin1_bin DEFAULT NULL,
+  `email` varchar(100) COLLATE latin1_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
-CREATE TABLE `point` 
-( 
-`userId` INT NOT NULL , 
-`value` INT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `level_reference` 
-( `id` INT NOT NULL , 
-`name` VARCHAR(100) NOT NULL , 
-`value` INT NOT NULL 
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 --
 -- Indexes for dumped tables
 --
@@ -129,8 +103,8 @@ CREATE TABLE `level_reference`
 --
 ALTER TABLE `annotation`
   ADD PRIMARY KEY (`annotationId`),
-  ADD KEY `userid` (`userId`),
-  ADD KEY `fileId` (`fileId`);
+  ADD KEY `fileId` (`fileId`),
+  ADD KEY `userId` (`userId`);
 
 --
 -- Indexes for table `file`
@@ -140,18 +114,12 @@ ALTER TABLE `file`
   ADD KEY `userId` (`userId`),
   ADD KEY `statusId` (`statusId`);
 
+--
+-- Indexes for table `point`
+--
 ALTER TABLE `point`
-  ADD PRIMARY KEY (`userid`);
-
-ALTER TABLE `level_reference`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `filelog`
---
-ALTER TABLE `filelog`
-  ADD KEY `userId` (`userId`),
-  ADD KEY `fileId` (`fileId`);
+  ADD PRIMARY KEY (`userId`),
+  ADD KEY `userId` (`userId`);
 
 --
 -- Indexes for table `status`
@@ -174,21 +142,25 @@ ALTER TABLE `user`
 --
 ALTER TABLE `annotation`
   MODIFY `annotationId` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `file`
 --
 ALTER TABLE `file`
   MODIFY `fileId` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `status`
 --
 ALTER TABLE `status`
   MODIFY `statusId` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
   MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- Constraints for dumped tables
 --
@@ -208,16 +180,12 @@ ALTER TABLE `file`
   ADD CONSTRAINT `file_ibfk_2` FOREIGN KEY (`statusId`) REFERENCES `status` (`statusId`);
 
 --
--- Constraints for table `filelog`
+-- Constraints for table `point`
 --
-ALTER TABLE `filelog`
-  ADD CONSTRAINT `fileLog_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`),
-  ADD CONSTRAINT `fileLog_ibfk_2` FOREIGN KEY (`fileId`) REFERENCES `file` (`fileId`);
+ALTER TABLE `point`
+  ADD CONSTRAINT `point_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-ALTER TABLE `point`
-  ADD CONSTRAINT `point_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
-
