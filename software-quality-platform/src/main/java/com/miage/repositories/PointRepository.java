@@ -6,6 +6,7 @@
 package com.miage.repositories;
 
 import com.miage.models.Point;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -13,5 +14,5 @@ import org.springframework.data.repository.CrudRepository;
  * @author Tamer
  */
 public interface PointRepository extends CrudRepository<Point, Integer> {
-
+    
 }

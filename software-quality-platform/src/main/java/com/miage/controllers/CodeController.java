@@ -113,7 +113,7 @@ public class CodeController {
 
         f.setFilePath(System.getProperty("user.dir") + "/" + env.getProperty("storage.localfolder") + "/" + file.getOriginalFilename());
         fileRepository.save(f);
-        //sendNotification(f.getFileName());
+       // sendNotification(f.getFileName());
         return new ResponseEntity<File>(f, HttpStatus.OK);
     }
 
@@ -128,7 +128,7 @@ public class CodeController {
         f.setUser(owner);
         f.setPushTime(new Timestamp(new Date().getTime()));
         fileRepository.save(f);
-        //notificationService.newCodeUploaded(file.getUserid(), f.getFileName());
+        notificationService.newCodeUploaded(file.getUserid(), f.getFileName());
         pointService.increasePoints(owner, GainRules.OWNER_UPLOAD,f);
         return "/files/all";
     }

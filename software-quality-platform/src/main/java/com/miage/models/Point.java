@@ -27,6 +27,11 @@ public class Point {
     @Column(name = "value")
     private Integer value;
 
+    @Override
+    public String toString() {
+        return  "Id = " + userId+"Point "+ value; //To change body of generated methods, choose Tools | Templates.
+    }
+
     public Point() {
     }
 
