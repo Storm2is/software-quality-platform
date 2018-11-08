@@ -53,8 +53,8 @@ public class PointsRestController {
         return userInfo;
     }
 
-    @GetMapping("/getLeaderBoard")
-    public List<UserPoints> getLeaderBoard() {
+    @GetMapping("/getUserPoints")
+    public List<UserPoints> getUserPoints() {
         List<UserPoints> userPoints = new ArrayList<>();
 
         leaderBoardService.getAllUsers()
@@ -68,7 +68,7 @@ public class PointsRestController {
         return userPoints;
     }
 
-    @GetMapping("/getAllUsersWithBadges")
+    @GetMapping("/getBadges")
     public List<UserBadge> getAllUsersWithBadges() {
         List<UserBadge> usersWithBages = new ArrayList<>();
 

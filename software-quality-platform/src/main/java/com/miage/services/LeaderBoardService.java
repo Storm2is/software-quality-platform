@@ -76,16 +76,16 @@ public class LeaderBoardService {
         List<String> badges = new ArrayList<>();        
         
         if (getUsersWithHighestPoint().contains(user))
-            badges.add("Super Star");
+            badges.add("super star");
         
         if (getUsersWithHighestNumberOfUploads().contains(user))
-            badges.add("Best Coder");
+            badges.add("best coder");
         
         if (getUsersWithHighestNumberOfReviews().contains(user))
-            badges.add("Master Reviewer");
+            badges.add("master reviewer");
         
         if (getUsersWithHighestNumberOfFilesWithoutAnnotations().contains(user))
-            badges.add("Master Coder");
+            badges.add("master coder");
         
         return badges;
     }
