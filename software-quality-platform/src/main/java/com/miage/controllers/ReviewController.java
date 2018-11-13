@@ -103,6 +103,8 @@ public class ReviewController {
         vmodel.setOriginContent(content);
         vmodel.setReviewerId(user.getId());
         model.addAttribute("model", vmodel);
+        model.addAttribute("owner", f.getUser());
+        model.addAttribute("file", f);
 
         return "review";
     }

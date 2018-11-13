@@ -8,43 +8,53 @@
 
         <section id="connect">
             <div class="container ">
-                <div class="row justify-content-center">
-                    <div class="col-lg-12 mx-auto">
-                        <h2 id="upload">Here is the list of files:</h2>
-                        <table class='table'>
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Status</th>
-                                    <th>Owner</th>
-                                    <th>Tags</th>
-                                    <th>Push Time</th>
-									<th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="file, rowStat: ${files}"
-                                    th:class="${file.status.statusName} == 'Accepted' ? 'table-success' : ''">
-                                    <td th:text="${file.fileId}">1</td>
-                                    <td th:text="${file.fileName}">Jack</td>
-                                    <td th:text="${file.status.statusName}">23</td>
-                                    <td th:text="${file.user.Username}">AVE N</td>
-                                    <td th:text="${file.tags}">AVE N</td>
-                                    <td th:text="${file.pushTime}">77587</td>
-									<td>
-										<form action="#" th:action="@{/review/file/} + ${{file.fileId}}" method="get">
-											<button class="btn btn-primary" th:id="'table_entry_childs_button_' + ${file.fileId}" type="submit">
-												<i>Review</i>
-											</button>
-										</form>
-									</td> 
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div></div>
+             
 
+                <div class="row-lg-12 justify-content-center ">
+
+                    <div class="col-lg-12 mx-auto">
+                        <div class="card">
+                            <h5 class="card-header">Files to Review:</h5>
+
+                            <div class="card-body">
+                                <table class='table table-bordered table-hover'>
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Owner</th>
+                                            <th>Tags</th>
+                                            <th>Push Time</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="file, rowStat: ${files}"
+                                            th:class="${file.status.statusName} == 'Accepted' ? 'table-success' : ''">
+                                            <td th:text="${file.fileId}">1</td>
+                                            <td th:text="${file.fileName}">Jack</td>
+                                            <td th:text="${file.status.statusName}">23</td>
+                                            <td th:text="${file.user.Username}">AVE N</td>
+                                            <td th:text="${file.tags}">AVE N</td>
+                                            <td th:text="${file.pushTime}">77587</td>
+                                            <td>
+                                                <form action="#" th:action="@{/review/file/} + ${{file.fileId}}" method="get">
+                                                    <button class="btn btn-primary" th:id="'table_entry_childs_button_' + ${file.fileId}" type="submit">
+                                                        <i>Review</i>
+                                                    </button>
+                                                </form>
+                                            </td> 
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
+
         </section>
 
         <div th:replace="fragments/footer :: footer"></div>

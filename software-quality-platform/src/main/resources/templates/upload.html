@@ -16,7 +16,34 @@ and open the template in the editor.
         <section id="connect">
             <div class="container">
 
-                <div class="row justify-content-center  uplaod">
+               
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-12 mx-auto">
+                        <div class="card">
+                            <h5 class="card-header">Uplaod a new file!</h5>
+
+                            <div class="card-body">
+                                <div class="pushCodeFirstStep">
+                                    <div class="file-upload">
+                                        <div class="file-select">
+                                            <div class="file-select-button" id="fileName">Choose File</div>
+                                            <div class="file-select-name" id="noFile">No file chosen...</div>
+                                            <input type="file" name="chooseFile" class="form-control-file" id="fileSelector"/>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control" id="tags" placeholder="Add tags here"/>
+                                    <button type="button" class="btn btn-primary" id="uploadBtn">Upload</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                
+                 <div class="row justify-content-center  uplaod">
 
 
                     <div class="col-lg-12 mx-auto">
@@ -51,28 +78,6 @@ and open the template in the editor.
                         </div>
                     </div>
                 </div>
-
-                <div class="row justify-content-center">
-                    <div class="col-lg-12 mx-auto">
-                        <div class="card">
-                            <h5 class="card-header">Uplaod a new file!</h5>
-
-                            <div class="card-body">
-                                <div class="pushCodeFirstStep">
-                                    <div class="file-upload">
-                                        <div class="file-select">
-                                            <div class="file-select-button" id="fileName">Choose File</div>
-                                            <div class="file-select-name" id="noFile">No file chosen...</div>
-                                            <input type="file" name="chooseFile" class="form-control-file" id="fileSelector"/>
-                                        </div>
-                                    </div>
-                                    <input type="text" class="form-control" id="tags" placeholder="Add tags here"/>
-                                    <button type="button" class="btn btn-primary" id="uploadBtn">Upload</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
         </section>
@@ -98,7 +103,7 @@ and open the template in the editor.
         <div th:replace="fragments/footer :: footer"></div>
         <script>
             $('#fileSelector').bind('change', function () {
-                var filename = $("#chooseFile").val();
+                var filename = $("#fileSelector").val();
                 if (/^\s*$/.test(filename)) {
                     $(".file-upload").removeClass('active');
                     $("#noFile").text("No file chosen...");

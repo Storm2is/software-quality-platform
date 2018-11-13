@@ -1,11 +1,11 @@
 INSERT INTO `user` (`userId`, `firstName`, `lastName`, `phone`, `email`, `username`) VALUES
-(1, 'Tamer', 'ABDULGHANI', '0682197891', 'Tamer.abdulghani@gmail.com', 'tamer'),
-(2, 'Rayhane', 'Belaroussi', '068012693', 'belarayhane@gmail.com', 'rayhane'),
-(3, 'Oluchi ', 'Onuorah', '0678321367', 'oluuchii@gmail.com', 'oluchi'),
-(4, 'Phuong ', 'Pham Kim', '0689431276', 'phamkimphuong.hcm@gmail.com', 'phuong'),
-(5, 'Mikhail', 'Ryzhov', '0690431276', 'msryzhov@gmail.com', 'mikhail'),
-(6, 'shujun ', 'Hou', '0612743287', 'shujunhou99@gmail.com', 'shujun'),
-(7, 'Collective ', 'Reviewer', '0123456789', 'collective_review@gmail.com', 'collective');
+(1, 'Tamer', 'ABDULGHANI', '0682197891', 'Tamer.abdulghani@gmail.com', 'Tamer'),
+(2, 'Rayhane', 'Belaroussi', '068012693', 'belarayhane@gmail.com', 'Rayhane'),
+(3, 'Oluchi ', 'Onuorah', '0678321367', 'oluuchii@gmail.com', 'Oluchi'),
+(4, 'Phuong ', 'Pham Kim', '0689431276', 'phamkimphuong.hcm@gmail.com', 'Phuong'),
+(5, 'Mikhail', 'Ryzhov', '0690431276', 'msryzhov@gmail.com', 'Mikhail'),
+(6, 'Shujun ', 'Hou', '0612743287', 'shujunhou99@gmail.com', 'Shujun'),
+(7, 'Collective ', 'Reviewer', '0123456789', 'collective_review@gmail.com', 'Collective Reviewer');
 
 
 INSERT INTO `status` (`statusId`, `statusName`) VALUES
