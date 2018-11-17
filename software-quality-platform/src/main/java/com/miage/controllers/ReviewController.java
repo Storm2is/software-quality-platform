@@ -21,20 +21,20 @@ import com.miage.viewmodels.AnnotationViewModel;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import static org.h2.util.DateTimeUtils.MILLIS_PER_DAY;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -137,6 +137,7 @@ public class ReviewController {
                     }
                 }
             }
+            file.setStatus(statusRepository.findById(4).get());
             pointService.decreasePointsByValue(file.getUser(), LoseRules.OWNER_ANNOTATE, annotationsNb * 2);
             pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE, file);
             pointService.increasePointsByValue(reviewer, GainRules.REVIEWER_VALIDATE, annotationsNb * 2);
@@ -162,11 +163,46 @@ public class ReviewController {
             annotation.setLineNb(-1);
             annotation.setTime(new Timestamp(new Date().getTime()));
             annotationRepository.save(annotation);
+            file.setStatus(statusRepository.findById(3).get());
             pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE, file);
         }
 
         notificationService.codeAnnotated(model.getReviewerId(), model.getFileId());
         return "/code/files";
+    }
+
+    @GetMapping("/annotations/{fileId}")
+    public String fileAnnotations(@PathVariable int fileId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByName(username);
+
+        File f = fileRepository.findById(fileId).get();
+        Resource file = storageService.loadAsResource(f.getFileName());
+        String fileLine = "";
+        String content = "";
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(file.getFile()));
+            while ((fileLine = br.readLine()) != null) {
+                content = content + fileLine + "\n";
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+        }
+
+        List<Annotation> list = annotationRepository.findByFileId(f.getFileId());
+        String annotations = String.join("", list.stream().map(x -> "#" + x.getLineNb() + " " + x.getComment()).collect(Collectors.toList()));
+        
+        AnnotationViewModel vmodel = new AnnotationViewModel();
+        vmodel.setFileId(f.getFileId());
+        vmodel.setOriginContent(content);
+        vmodel.setReviewerId(user.getId());
+        vmodel.setAnnotations(annotations);
+        model.addAttribute("model", vmodel);
+        model.addAttribute("owner", f.getUser());
+        model.addAttribute("file", f);
+        return "annotations";
     }
 
     // Display list of files for reviewer in the file.htlm page (exclude the owner's files)
@@ -176,11 +212,9 @@ public class ReviewController {
         List<File> results = new ArrayList<>();
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "pushTime"));
 
-        for (File file : fileRepository.findAll(sort)) {
-            if (!Objects.equals(file.getUser().getId(), userId)) {
-                results.add(file);
-            }
-        }
+        fileRepository.findAll(sort).stream().filter((file) -> (!Objects.equals(file.getUser().getId(), userId))).forEachOrdered((file) -> {
+            results.add(file);
+        });
         model.addAttribute("files", results);
 
         return "files";

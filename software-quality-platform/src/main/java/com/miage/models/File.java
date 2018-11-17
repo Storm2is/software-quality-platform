@@ -6,6 +6,8 @@
 package com.miage.models;
 
 import java.sql.Timestamp;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import static org.h2.util.DateTimeUtils.MILLIS_PER_DAY;
 
 /**
  *
@@ -35,7 +38,7 @@ public class File {
 
     @Column(name = "filePath")
     private String filePath;
-    
+
     @Column(name = "fileLength")
     private Integer fileLength;
 
@@ -57,7 +60,7 @@ public class File {
     }
 
     // Id is auto generated
-    public File(String fileName, String extension, String filePath,Integer fileLength,String tags, Timestamp pushTime, Status status, User user) {
+    public File(String fileName, String extension, String filePath, Integer fileLength, String tags, Timestamp pushTime, Status status, User user) {
         this.fileName = fileName;
         this.extension = extension;
         this.filePath = filePath;
@@ -140,4 +143,28 @@ public class File {
         this.user = user;
     }
 
+    public String Duration() {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        Date date1 = new Date(now.getTime());
+        Date date2 = new Date(this.getPushTime().getTime());
+        long millseconds = Math.abs(date1.getTime() - date2.getTime());
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millseconds);
+        long sec = seconds % 60;
+        long minutes = seconds % 3600 / 60;
+        long hours = seconds % 86400 / 3600;
+        long days = seconds / 86400;
+
+        String duration = "";
+
+        if (days != 0) {
+            duration += days + " Days, ";
+        }
+
+        if (hours != 0) {
+            duration += hours + " Hours & ";
+        }
+
+        duration += minutes + " Minutes ";
+        return duration;
+    }
 }

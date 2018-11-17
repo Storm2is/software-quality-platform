@@ -3,7 +3,6 @@ package com.miage.controllers;
 import com.miage.enums.GainRules;
 import com.miage.services.NotificationService;
 import com.miage.repositories.FileRepository;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.miage.helpers.storage.IStorageService;
 import com.miage.models.File;
-import com.miage.models.Point;
 import com.miage.models.User;
 import com.miage.repositories.StatusRepository;
 import com.miage.repositories.UserRepository;
@@ -28,9 +26,11 @@ import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -76,19 +76,21 @@ public class CodeController {
     }
 
     @GetMapping("/upload")
-    public String uploadPage(Model model) throws IOException {
-        model.addAttribute("files", fileRepository.findAll());
-        /*
-        model.addAttribute("username", username);
-        int userid = userRepository.getUserIdByUsername(username);
-        model.addAttribute("userid", userid);
-         */
+    public String upload(Model model) throws IOException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User owner = userRepository.findByName(username);
+
+        List<File> files = fileRepository.findAll();
+        Collections.sort(files, (File f1, File f2) -> f2.getPushTime().compareTo(f1.getPushTime()));
+        files = files.stream().filter(x -> x.getUser().getId() == owner.getId()).collect(Collectors.toList());
+        model.addAttribute("files", files);
         return "upload";
     }
 
     @PostMapping("/upload")
     @ResponseBody
-    public ResponseEntity<File> uploadCodeHandler(
+    public ResponseEntity<File> upload(
             @RequestParam("file") MultipartFile file,
             @RequestParam("tags") String tags,
             RedirectAttributes redirectAttributes) throws MessagingException, IOException {
@@ -100,8 +102,6 @@ public class CodeController {
         f.setExtension(file.getContentType());
         f.setTags(tags);
 
-        // try to get the number of line from file objectt
-        // lenght = fgdgdfgdfg
         FileReader fr = new FileReader(System.getProperty("user.dir") + "/" + env.getProperty("storage.localfolder") + "/" + file.getOriginalFilename());
         LineNumberReader lnr = new LineNumberReader(fr);
         int lines = 0;
@@ -113,13 +113,13 @@ public class CodeController {
 
         f.setFilePath(System.getProperty("user.dir") + "/" + env.getProperty("storage.localfolder") + "/" + file.getOriginalFilename());
         fileRepository.save(f);
-       // sendNotification(f.getFileName());
-        return new ResponseEntity<File>(f, HttpStatus.OK);
+        // sendNotification(f.getFileName());
+        return new ResponseEntity<>(f, HttpStatus.OK);
     }
 
     @PostMapping("/push")
     @ResponseBody
-    public String pushCode(@RequestBody FileViewModel file) {
+    public String push(@RequestBody FileViewModel file) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User owner = userRepository.findByName(username);
@@ -129,7 +129,7 @@ public class CodeController {
         f.setPushTime(new Timestamp(new Date().getTime()));
         fileRepository.save(f);
         notificationService.newCodeUploaded(file.getUserid(), f.getFileName());
-        pointService.increasePoints(owner, GainRules.OWNER_UPLOAD,f);
+        pointService.increasePoints(owner, GainRules.OWNER_UPLOAD, f);
         return "/files/all";
     }
 
@@ -152,8 +152,12 @@ public class CodeController {
     }
 
     @GetMapping("/files")
-    public String getAllFile(Model model) {
-        model.addAttribute("files", fileRepository.findAll());
+    public String getAllFiles(Model model) {
+        List<File> files = fileRepository.findAll();
+
+        Collections.sort(files, (File f1, File f2) -> f1.getStatus().getStatusId().compareTo(f2.getStatus().getStatusId()));
+
+        model.addAttribute("files", files);
         return "files";
     }
 
@@ -161,29 +165,11 @@ public class CodeController {
     public String getUserFiles(Model model, @PathVariable Integer userId) {
         List<File> results = new ArrayList<>();
 
-        for (File file : fileRepository.findAll()) {
-            if (Objects.equals(file.getUser().getId(), userId)) {
-                results.add(file);
-            }
-        }
+        fileRepository.findAll().stream().filter((file) -> (Objects.equals(file.getUser().getId(), userId))).forEachOrdered((file) -> {
+            results.add(file);
+        });
         model.addAttribute("files", results);
 
         return "upload";
     }
-
-    /*
-    @GetMapping("/files/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-
-        Resource file = storageService.loadAsResource(filename);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-    }
-
-    @RequestMapping("/files/GetAllFile")
-    public ResponseEntity<Resource> getAllFile() {
-        return (ResponseEntity<Resource>) fileRepository.findAll();
-    }
-     */
 }

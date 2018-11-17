@@ -11,8 +11,8 @@ INSERT INTO `user` (`userId`, `firstName`, `lastName`, `phone`, `email`, `userna
 INSERT INTO `status` (`statusId`, `statusName`) VALUES
 (1, 'Ready'),
 (2, 'InProgress'),
-(3, 'Accepted'),
-(4, 'Rejected');
+(3, 'Validated'),
+(4, 'Reviewed');
 
 INSERT INTO `file` (`fileId`, `fileName`, `extension`, `filePath`, `fileLength`, `tags`, `pushTime`, `userId`, `statusId`) VALUES 
 (1, 'Initializing spring boot maven', 'java', 'C:\\Users\\Documents\\GitHub\\software-quality-platform\\src', 100, '#java, #mvc, #spring', '2018-10-06 08:30:24', 1, 3),

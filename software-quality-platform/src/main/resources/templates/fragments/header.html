@@ -16,13 +16,16 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" id='username' th:attr="value=${#httpServletRequest.remoteUser}" th:text=" 'Hello ' + ${#httpServletRequest.remoteUser}">Hello!</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/code/files">Review Code</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger logout" >Disconnect</a>
+                        <a class="nav-link js-scroll-trigger" href="/code/upload">Upload Code</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle nav-link js-scroll-trigger" data-toggle="dropdown" id='username' th:attr="value=${#httpServletRequest.remoteUser}" th:text=" ' Hello ' + ${#httpServletRequest.remoteUser}">Hello! <span class="fa fa-user pull-right"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item logout">Disconnect <span class="fa fa-sign-out"></span></a></li>
+                        </ul>
                     </li>
                     <script>
                         $('.logout').on('click', function () {

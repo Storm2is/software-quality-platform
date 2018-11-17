@@ -6,12 +6,17 @@
 package com.miage.repositories;
 
 import com.miage.models.Annotation;
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  *
  * @author Tamer
  */
-public interface AnnotationRepository extends CrudRepository<Annotation, Integer> {
+public interface AnnotationRepository extends JpaRepository<Annotation, Integer> {
+
+    @Query("SELECT a FROM Annotation a WHERE a.file.fileId = ?1")
+    List<Annotation> findByFileId(int fileId);
 
 }

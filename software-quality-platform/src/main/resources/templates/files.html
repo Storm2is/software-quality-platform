@@ -8,7 +8,7 @@
 
         <section id="connect">
             <div class="container ">
-             
+
 
                 <div class="row-lg-12 justify-content-center ">
 
@@ -25,7 +25,7 @@
                                             <th>Status</th>
                                             <th>Owner</th>
                                             <th>Tags</th>
-                                            <th>Push Time</th>
+                                            <th>Uploaded since</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -37,13 +37,17 @@
                                             <td th:text="${file.status.statusName}">23</td>
                                             <td th:text="${file.user.Username}">AVE N</td>
                                             <td th:text="${file.tags}">AVE N</td>
-                                            <td th:text="${file.pushTime}">77587</td>
+                                            <td th:text="${file.Duration()}">77587</td>
                                             <td>
-                                                <form action="#" th:action="@{/review/file/} + ${{file.fileId}}" method="get">
-                                                    <button class="btn btn-primary" th:id="'table_entry_childs_button_' + ${file.fileId}" type="submit">
-                                                        <i>Review</i>
-                                                    </button>
-                                                </form>
+                                                <div th:switch="${file.status.statusName}"> 
+                                                    <form th:case="'Ready'" action="#" th:action="@{/review/file/} + ${{file.fileId}}" method="get">
+                                                        <button class="btn btn-primary" th:id="'table_entry_childs_button_' + ${file.fileId}" type="submit">
+                                                            <i>Review</i>
+                                                        </button>
+                                                    </form>
+                                                    <form th:case="*" action="#" th:action="@{/review/file/} + ${{file.fileId}}" method="get">
+                                                    </form>
+                                                </div>
                                             </td> 
                                         </tr>
                                     </tbody>

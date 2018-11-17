@@ -38,18 +38,17 @@ public class Application {
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx, IStorageService storageService) {
-        return args -> {
-
-            System.out.println("Let's inspect the beans provided by Spring Boot:");
-            //storageService.deleteAll();
-            storageService.init();
-            String[] beanNames = ctx.getBeanDefinitionNames();
-            Arrays.sort(beanNames);
-            for (String beanName : beanNames) {
-                System.out.println(beanName);
+        return new CommandLineRunner() {
+            @Override
+            public void run(String[] args) throws Exception {
+                System.out.println("Let's inspect the beans provided by Spring Boot:");
+                storageService.init();
+                String[] beanNames = ctx.getBeanDefinitionNames();
+                Arrays.sort(beanNames);
+                for (String beanName : beanNames) {
+                    System.out.println(beanName);
+                }
             }
-
         };
     }
-
 }
