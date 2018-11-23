@@ -1,0 +1,11 @@
+.cardBadge{
+  white-space: nowrap;
+  display: inline-block;
+  align-items:center;
+  border: none;
+}
+
+.cardImage{
+  height: 151px;
+  width: 123px;
+}
