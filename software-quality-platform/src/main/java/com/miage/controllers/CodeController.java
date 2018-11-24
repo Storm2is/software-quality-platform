@@ -170,6 +170,7 @@ public class CodeController {
 
         // Collections.sort(files, (File f1, File f2) -> f1.getStatus().getStatusId().compareTo(f2.getStatus().getStatusId()));
         Collections.sort(files, (File f1, File f2) -> f1.getPushTime().compareTo(f2.getPushTime()));
+        Collections.reverse(files);
 
         model.addAttribute("files", files);
         return "files";
@@ -183,6 +184,7 @@ public class CodeController {
             results.add(file);
         });
         Collections.sort(results, (File f1, File f2) -> f1.getPushTime().compareTo(f2.getPushTime()));
+        Collections.reverse(results);
 
         model.addAttribute("files", results);
 
