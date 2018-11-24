@@ -163,7 +163,7 @@ public class ReviewController {
             annotation.setLineNb(-1);
             annotation.setTime(new Timestamp(new Date().getTime()));
             annotationRepository.save(annotation);
-            file.setStatus(statusRepository.findById(3).get());
+            file.setStatus(statusRepository.findById(4).get());
             pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE, file);
         }
 
@@ -176,7 +176,8 @@ public class ReviewController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByName(username);
-
+        
+        
         File f = fileRepository.findById(fileId).get();
         Resource file = storageService.loadAsResource(f.getFileName());
         String fileLine = "";
@@ -193,30 +194,29 @@ public class ReviewController {
 
         List<Annotation> list = annotationRepository.findByFileId(f.getFileId());
         String annotations = String.join("", list.stream().map(x -> "#" + x.getLineNb() + " " + x.getComment()).collect(Collectors.toList()));
-        
+
         AnnotationViewModel vmodel = new AnnotationViewModel();
         vmodel.setFileId(f.getFileId());
         vmodel.setOriginContent(content);
         vmodel.setReviewerId(user.getId());
         vmodel.setAnnotations(annotations);
         model.addAttribute("model", vmodel);
+        model.addAttribute("Reviewer", list.get(0).getUser());
+
         model.addAttribute("owner", f.getUser());
         model.addAttribute("file", f);
         return "annotations";
     }
 
-    // Display list of files for reviewer in the file.htlm page (exclude the owner's files)
-   /* @GetMapping("/")
-    public String getAllFile(Model model, @PathVariable Integer userId) {
+    @PostMapping("/annotaions/{fileId}")
+    @ResponseBody
+    public String validateFile(@RequestBody AnnotationViewModel model) {
 
-        List<File> results = new ArrayList<>();
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "pushTime"));
+        File file = fileRepository.findById(model.getFileId()).get();
+        file.setStatus(statusRepository.findById(3).get());
 
-        fileRepository.findAll(sort).stream().filter((file) -> (!Objects.equals(file.getUser().getId(), userId))).forEachOrdered((file) -> {
-            results.add(file);
-        });
-        model.addAttribute("files", results);
 
-        return "files";
-    }*/
+        return "/code/files";
+    }
+
 }

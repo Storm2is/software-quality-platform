@@ -6,6 +6,9 @@
 package com.miage.repositories;
 
 import com.miage.models.Status;
+import com.miage.models.User;
+import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -13,5 +16,6 @@ import org.springframework.data.repository.CrudRepository;
  * @author Tamer
  */
 public interface StatusRepository extends CrudRepository<Status, Integer> {
-
+    
+   
 }

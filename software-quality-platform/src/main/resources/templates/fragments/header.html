@@ -21,6 +21,17 @@
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/code/upload">Upload Code</a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Dashbaord
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item team" href="#">Team Progress</a>
+                            <div class="dropdown-divider"></div>
+
+                            <a class="dropdown-item member" href="#">Your Progress</a>
+                        </div>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle nav-link js-scroll-trigger" data-toggle="dropdown" id='username' th:attr="value=${#httpServletRequest.remoteUser}" th:text=" ' Hello ' + ${#httpServletRequest.remoteUser}">Hello! <span class="fa fa-user pull-right"></span></a>
                         <ul class="dropdown-menu">
@@ -34,6 +45,20 @@
                             });
                             ;
                         });
+                        /*
+                        $('.team').on('click', function () {
+                            $.post('/logout', null).done(function (data) {
+                                window.location.href = "/dashboard page"
+                            });
+                            ;
+                        });
+                        
+                        $('.member').on('click', function () {
+                            $.post('/logout', null).done(function (data) {
+                                window.location.href = "/memeber page"
+                            });
+                            ;
+                        });*/
                     </script>
                 </ul>
             </div>

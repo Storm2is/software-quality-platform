@@ -68,7 +68,7 @@ $(document).ready(function () {
             success: function (data) {
             }
         });
-        window.location = "/code/files";
+        window.location = "/code/upload";
     });
 });
 
