@@ -206,7 +206,7 @@ public class ReviewController {
     }
 
     // Display list of files for reviewer in the file.htlm page (exclude the owner's files)
-    @GetMapping("/{userId}")
+   /* @GetMapping("/")
     public String getAllFile(Model model, @PathVariable Integer userId) {
 
         List<File> results = new ArrayList<>();
@@ -218,5 +218,5 @@ public class ReviewController {
         model.addAttribute("files", results);
 
         return "files";
-    }
+    }*/
 }
