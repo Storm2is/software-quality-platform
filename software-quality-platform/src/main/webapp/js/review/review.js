@@ -18,6 +18,26 @@ $('#submitReviewBtn').on('click', function () {
     window.location = "/code/files";
 });
 
+$('#submitAnnotationBtn').on('click', function () {
+    var form = $("#submitAnnotationForm").serializeArray();
+    var data = objectifyForm(form);
+    $.ajax({
+        url: 'http://localhost:8080/review/annotations/' + $("#fileId").val(),
+        dataType: 'application/json',
+        data: JSON.stringify(data),
+        async: false,
+        cache: false,
+        contentType: 'application/json; charset=utf-8',
+        method: 'POST',
+        type: 'POST',
+        success: function (data) {
+            console.log("Success");
+        }
+    });
+    window.location = "/code/files";
+});
+
+
 function objectifyForm(formArray) {//serialize data function
     var returnArray = {};
     for (var i = 0; i < formArray.length; i++) {

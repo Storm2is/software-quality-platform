@@ -28,6 +28,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -130,7 +131,7 @@ public class CodeController {
         fileRepository.save(f);
         notificationService.newCodeUploaded(file.getUserid(), f.getFileName());
         pointService.increasePoints(owner, GainRules.OWNER_UPLOAD, f);
-        return "/files/all";
+        return "upload";
     }
 
     @RequestMapping(value = "/filecontent/{filename}", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
@@ -155,7 +156,21 @@ public class CodeController {
     public String getAllFiles(Model model) {
         List<File> files = fileRepository.findAll();
 
-        Collections.sort(files, (File f1, File f2) -> f1.getStatus().getStatusId().compareTo(f2.getStatus().getStatusId()));
+        //get connected user 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User owner = userRepository.findByName(username);
+
+        // remove owners files
+        List<File> results = new ArrayList<>();
+        fileRepository.findAll().stream().filter((file) -> (Objects.equals(file.getUser().getId(), owner.getId()))).forEachOrdered((file) -> {
+            results.add(file);
+        });
+        files.removeAll(new HashSet(results));
+
+        // Collections.sort(files, (File f1, File f2) -> f1.getStatus().getStatusId().compareTo(f2.getStatus().getStatusId()));
+        Collections.sort(files, (File f1, File f2) -> f1.getPushTime().compareTo(f2.getPushTime()));
+        Collections.reverse(files);
 
         model.addAttribute("files", files);
         return "files";
@@ -168,6 +183,9 @@ public class CodeController {
         fileRepository.findAll().stream().filter((file) -> (Objects.equals(file.getUser().getId(), userId))).forEachOrdered((file) -> {
             results.add(file);
         });
+        Collections.sort(results, (File f1, File f2) -> f1.getPushTime().compareTo(f2.getPushTime()));
+        Collections.reverse(results);
+
         model.addAttribute("files", results);
 
         return "upload";

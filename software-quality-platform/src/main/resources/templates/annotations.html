@@ -8,42 +8,46 @@
         <section id="connect">
             <div class="container ">
                 <div class="row-lg-12 justify-content-center ">
-                    <div class="card">
-                        <h6 class="card-header" >File Info:</h6>
+                    <div class="col">
+                        <div class="card">
+                            <h6 class="card-header" >File Info:</h6>
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="'File name : ' +${file.fileName}">File name : </h5>
+                                <h6 class="card-text" th:text="'Code owner : ' +${owner.username}">Code owner : </h6>
+                                <h6 class="card-text" th:text="'Reviewer name : ' +${Reviewer.username}">Code Reviewer : </h6>
 
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="'File name : ' +${file.fileName}">File name : </h5>
-                            <p class="card-text" th:text="'Code owner : ' +${owner.username}">Code owner : </p>
-                            <p class="card-text" th:text="'Tags : ' +${file.tags}">Code owner : </p>
-
+                                <p class="card-text" th:text="'Tags : ' +${file.tags}">Tags : </p>
+                            </div>
                         </div>
-
                     </div>
+
+
 
                 </div>
                 <br><hr>
                 <div class="row justify-content-center">
                     <div class="col-lg-12 mx-auto">
                         <h3 id="upload">Review Code:</h3>
-                        <form id="submitReviewForm" method="POST">
+                        <form id="submitAnnotationForm" method="POST">
                             <input type="hidden" name="fileId" id="fileId" th:value="${model.fileId}">
                             <input type="hidden" name="reviewerId" id="reviewerId" th:value="${model.reviewerId}">
                             <div class="row">
                                 <div class="col-md-8" th:object="${model}">
                                     <div class="form-group">
                                         <label for="originalCode">Original Code</label>
+
                                         <textarea style="white-space: nowrap;" class="form-control" name="originContent" id="originalCode" th:field="*{originContent}"  rows="20" col="500"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-4" th:object="${model}">
                                     <div class="form-group">
                                         <label for="annotations">Reviewer Annotations</label>
-                                        <textarea style="white-space: nowrap;" class="form-control" name="annotations" id="annotations" th:field="*{annotations}" rows = "20"  col="500"></textarea>
+                                        <textarea style="white-space: nowrap;" class="form-control" name="annotations" id="annotations" th:field="*{annotations}" rows = "20"  col="500" readonly></textarea>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12 justify-content-center text-center">
-                                <button class="btn btn-primary btn-lg " id="submitReviewBtn" type="button" name="validate" value="validate">Validate</button>
+                                <button class="btn btn-primary btn-lg " id="submitAnnotationBtn" type="button" name="validate" value="validate">Corrected</button>
                             </div>
                         </form>
                     </div>
