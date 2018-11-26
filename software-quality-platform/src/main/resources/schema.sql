@@ -100,13 +100,24 @@ CREATE TABLE `user` (
 --
 
 CREATE TABLE `sprint` (
-  `sprintId` int(11) NOT NULL,
-  `startTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `endTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `start` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `end` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `goal` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
+--
+--
+-- Table structure for table `quality`
+--
 
+CREATE TABLE `quality` (
+  `qualityId` int(11) NOT NULL,
+  `sprintId` int(11) NOT NULL,
+  `label` varchar(100) COLLATE latin1_bin DEFAULT NULL,
+  `value` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 -- Indexes for dumped tables
 --
 
@@ -127,10 +138,17 @@ ALTER TABLE `file`
   ADD KEY `statusId` (`statusId`);
 
 --
--- Indexes for table `file`
+-- Indexes for table `sprint`
 --
 ALTER TABLE `sprint`
-  ADD PRIMARY KEY (`sprintId`);
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `file`
+--
+ALTER TABLE `quality`
+  ADD PRIMARY KEY (`qualityId`),
+  ADD KEY `sprintId` (`sprintId`);
 --
 -- Indexes for table `point`
 --
@@ -182,7 +200,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `sprint`
 --
 ALTER TABLE `sprint`
-  MODIFY `sprintId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sprint`
+--
+ALTER TABLE `quality`
+  MODIFY `qualityId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -207,6 +231,13 @@ ALTER TABLE `file`
 --
 ALTER TABLE `point`
   ADD CONSTRAINT `point_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
+COMMIT;
+
+--
+-- Constraints for table `quality`
+--
+ALTER TABLE `quality`
+  ADD CONSTRAINT `quality_ibfk_1` FOREIGN KEY (`sprintId`) REFERENCES `sprint` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

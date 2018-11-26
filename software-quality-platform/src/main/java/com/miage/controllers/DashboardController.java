@@ -8,10 +8,20 @@ package com.miage.controllers;
 import com.miage.enums.CodeQualification;
 import com.miage.models.Annotation;
 import com.miage.models.File;
+import com.miage.models.Quality;
 import com.miage.models.Sprint;
+import com.miage.models.User;
 import com.miage.repositories.AnnotationRepository;
 import com.miage.repositories.FileRepository;
+import com.miage.repositories.QualityRepository;
 import com.miage.repositories.SprintRepository;
+import com.miage.repositories.UserRepository;
+import com.miage.services.LeaderBoardService;
+import com.miage.viewmodels.SMDashboardViewModel;
+import com.miage.viewmodels.QualityViewModel;
+import com.miage.viewmodels.SprintProgressViewModel;
+import com.miage.viewmodels.UserDashboardViewModel;
+import com.miage.viewmodels.UserViewModel;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -19,8 +29,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,10 +55,19 @@ public class DashboardController {
     private FileRepository fileRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private QualityRepository qualityRepository;
+
+    @Autowired
     private AnnotationRepository annotationRepository;
 
     @Autowired
     private SprintRepository sprintRepository;
+
+    @Autowired
+    private LeaderBoardService leaderBoardService;
 
     @GetMapping("/member")
     public String member_dashboard(Model model) throws IOException {
@@ -56,12 +79,92 @@ public class DashboardController {
         return "sm_dashboard";
     }
 
+    @GetMapping("/getScrumMasterData")
+    @ResponseBody
+    public List<SMDashboardViewModel> get_scrum_master_data(Model model) throws IOException {
+        List<SMDashboardViewModel> data = new ArrayList<>();
+
+        List<Sprint> sprints = sprintRepository.findAll();
+        List<User> users = userRepository.findAll();
+        List<Quality> qualities = qualityRepository.findAll();
+
+        for (Sprint s : sprints) {
+            SMDashboardViewModel item = new SMDashboardViewModel();
+
+            List<UserViewModel> uvml = new ArrayList<UserViewModel>();
+            for (User u : users) {
+                UserViewModel uvm = new UserViewModel();
+                uvm.setUser(u);
+                uvm.setPoints(leaderBoardService.getUserPoints(u).getValue());
+                uvm.setBadges(leaderBoardService.getAllBadges(u));
+                uvm.setUploadedFiles(10);
+                uvm.setReviewedFiles(15);
+                uvml.add(uvm);
+            }
+            item.setUsers(uvml);
+
+            item.setPeriod(s);
+            List<Quality> qlist = qualities.stream().filter(x -> Objects.equals(x.getSprintId(), s.getId())).collect(Collectors.toList());
+            item.setQuality(qlist);
+            List<SprintProgressViewModel> spm = new ArrayList<>();
+            for (int i = 1; i <= s.getId(); i++) {
+                SprintProgressViewModel spvm = new SprintProgressViewModel();
+                int a = i;
+                Sprint s1 = sprints.stream().filter(x -> a == x.getId()).findFirst().get();
+                spvm.setDate(s1.getEnd());
+                spvm.setValue(s1.getGoal());
+                spm.add(spvm);
+            }
+            item.setSprintGoal(spm);
+            item.setAcceptedCode(spm);
+            data.add(item);
+        }
+        return data;
+    }
+
+    @GetMapping("/getUserData")
+    @ResponseBody
+    public List<UserDashboardViewModel> get_user_data(Model model) throws IOException {
+        List<UserDashboardViewModel> list = new ArrayList<>();
+        List<Sprint> sprints = sprintRepository.findAll();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByName(username);
+
+        List<Quality> qualities = qualityRepository.findAll();
+
+        for (Sprint s : sprints) {
+            UserDashboardViewModel usvm = new UserDashboardViewModel();
+            usvm.setPeriod(s);
+
+            List<SprintProgressViewModel> spm = new ArrayList<>();
+            for (int i = 1; i <= s.getId(); i++) {
+                SprintProgressViewModel spvm = new SprintProgressViewModel();
+                int a = i;
+                Sprint s1 = sprints.stream().filter(x -> a == x.getId()).findFirst().get();
+                spvm.setDate(s1.getEnd());
+                spvm.setValue(s1.getGoal());
+                spm.add(spvm);
+            }
+            usvm.setSprintGoal(spm);
+            usvm.setAcceptedCode(spm);
+            List<Quality> qlist = qualities.stream().filter(x -> Objects.equals(x.getSprintId(), s.getId())).collect(Collectors.toList());
+            usvm.setQuality(qlist);
+            usvm.setBadges(leaderBoardService.getAllBadges(user));
+            usvm.setUploadedFiles(10);
+            usvm.setReviewedFiles(15);
+            list.add(usvm);
+        }
+        return list;
+    }
+
     //With each sprint:
     //count nb_anno by files (reviewed / validated
     //Ignore file haven't reviewed yet (in progress or ready)
     public Map<Integer, Integer> countAnnotationByFile(Model model, int sprintID) {
-        Timestamp startTime = sprintRepository.findById(sprintID).get().getStartTime();
-        Timestamp endTime = sprintRepository.findById(sprintID).get().getEndTime();
+        Timestamp startTime = sprintRepository.findById(sprintID).get().getStart();
+        Timestamp endTime = sprintRepository.findById(sprintID).get().getEnd();
 
         Map<Integer, Integer> file_anno = new HashMap<Integer, Integer>();
 
@@ -154,10 +257,10 @@ public class DashboardController {
             int total_ann_by_sprint = 0;
             int total_accepted_by_sprint = 0;
 
-            int sprintID = sp.getSprintId();
+            int sprintID = sp.getId();
 
-            Timestamp startTime = sprintRepository.findById(sprintID).get().getStartTime();
-            Timestamp endTime = sprintRepository.findById(sprintID).get().getEndTime();
+            Timestamp startTime = sprintRepository.findById(sprintID).get().getStart();
+            Timestamp endTime = sprintRepository.findById(sprintID).get().getEnd();
 
             //Explore all files reviewed in this sprint and count the total annotation
             for (File f : fileRepository.findAll()) {

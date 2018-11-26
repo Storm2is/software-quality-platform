@@ -1,10 +1,20 @@
-//initialize
-var initData = data[data.length - 1];
-populateUserDashboard(initData);
-// Populate drop Select Period drop down menu
-data.map(function (d) {
-    var str = "<a class='dropdown-item' href='#'" + "value='" + d.period.id + "'>" + d.period.name + " : " + d.period.start + " - " + d.period.end + "</a>";
-    $(".sprintPeriod").append(str);
+
+var data = [];
+$(document).ready(function () {
+    $.ajax({
+        url: "http://localhost:8080/dashboard/getUserData"
+    }).then(function (result) {
+        console.log(result);
+        data = result;
+        //initialize
+        var initData = data[data.length - 1];
+        populateUserDashboard(initData);
+        // Populate drop Select Period drop down menu
+        data.map(function (d) {
+            var str = "<a class='dropdown-item' href='#'" + "value='" + d.period.id + "'>" + d.period.name + " : " + d.period.start + " - " + d.period.end + "</a>";
+            $(".sprintPeriod").append(str);
+        });
+    });
 });
 //End initialization-------------------------
 

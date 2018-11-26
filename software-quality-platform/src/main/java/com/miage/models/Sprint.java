@@ -5,6 +5,7 @@
  */
 package com.miage.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,46 +26,64 @@ public class Sprint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "sprintId")
-    private Integer sprintId;
+    @Column(name = "id")
+    private Integer id;
 
-    @Column(name = "startTime")
-    private Timestamp startTime;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "endTime")
-    private Timestamp endTime;
+    @Column(name = "start")
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    private Timestamp start;
+
+    @Column(name = "end")
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    private Timestamp end;
 
     @Column(name = "goal")
     private int goal;
 
-    // Id is auto generated
-    public Sprint(Timestamp startTime, Timestamp endTime, int goal) {
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.goal = goal;
-    }
-
     public Sprint() {
     }
 
-    public Integer getSprintId() {
-        return sprintId;
+    public Sprint(Integer id, String name, Timestamp start, Timestamp end, int goal) {
+        this.id = id;
+        this.name = name;
+        this.start = start;
+        this.end = end;
+        this.goal = goal;
     }
 
-    public Timestamp getStartTime() {
-        return startTime;
+    public Integer getId() {
+        return id;
     }
 
-    public void setStartTime(Timestamp startTime) {
-        this.startTime = startTime;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Timestamp getEndTime() {
-        return endTime;
+    public String getName() {
+        return name;
     }
 
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Timestamp getStart() {
+        return start;
+    }
+
+    public void setStart(Timestamp start) {
+        this.start = start;
+    }
+
+    public Timestamp getEnd() {
+        return end;
+    }
+
+    public void setEnd(Timestamp end) {
+        this.end = end;
     }
 
     public int getGoal() {

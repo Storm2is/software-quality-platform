@@ -5,14 +5,15 @@
  */
 package com.miage.repositories;
 
+import com.miage.models.Quality;
 import com.miage.models.Sprint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
 /**
  *
- * @author kimphuong
+ * @author Tamer
  */
-public interface SprintRepository extends JpaRepository<Sprint, Integer> {
-
+public interface QualityRepository extends JpaRepository<Quality, Integer> {
+    
 }
