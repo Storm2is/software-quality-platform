@@ -1,99 +1,108 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Graphs example</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/dashboard/style.css">
-    <script src="/js/dashboard/D3/d3.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <head>
+        <title>Team Dashboard</title>
 
-    <script src="/js/dashboard/Data/loadUser.js"> </script>
-  </head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/dashboard/style.css">
+        <script src="/js/dashboard/D3/d3.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
-  <body>
-       <div th:replace="fragments/header :: header"></div>
-      <div class="container mainGrid">
-        <div class="row justify-content-md-center">
-          <div class="col-sm-auto">
-            <h2>Dashboard</h2>
-          </div>
-        </div>
-        <div class="row justify-content-md-center"><!--Selecet Period row-->
-          <div class="col-sm-auto">
-            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Select Period
-            </a>
-            <!--To populate dropdown menu use .sprintPeriod -->
-            <div class="dropdown-menu sprintPeriod" aria-labelledby="dropdownMenuLink"></div>
-          </div>
-          <div class="col-sm-auto">
-            <h3 id="selectedPeriod">Selected period:</h3>
-          </div>
-        </div><!--End Selecet Period row-->
+        <script src="/js/dashboard/Data/loadUser.js"></script>
+    </head>
 
-        <div class="row justify-content-md-center">
-          <div class="col-sm-auto">
-            <h3>My results</h3>
-          </div>
-        </div>
+    <body>
+        <div th:replace="fragments/header :: header"></div>
 
-        <div class="row justify-content-md-center"><!--Counters row (NumOfFiles upload and etc.) -->
-          <!--to populate .myDashboard data use #filesUloaded #filesReviewed-->
-          <div class="col-sm-auto">
-            <div class="myDashboard">
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <td>Number of files uploaded :</td>
-                    <td id="filesUloaded">10</td>
-                  </tr>
-                  <tr>
-                    <td>Number of files reviewed :</td>
-                    <td id="filesReviewed">8</td>
-                  </tr>
-                </tbody>
-              </table>
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li style ="font-size: 28px;" class="breadcrumb-item active" aria-current="page">Your Dashboard</li>
+                </ol>
+            </nav> 
+
+            <div style="margin-top: 20px; margin-bottom: 30px;" class="row justify-content-md-center"><!--Selecet Period row-->
+                <div class="col-sm-auto">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select Period
+                    </a>
+                    <!--To populate dropdown menu use .sprintPeriod -->
+                    <div class="dropdown-menu sprintPeriod" aria-labelledby="dropdownMenuLink"></div>
+                </div>
+                <div class="col-sm-auto">
+                    <h3 style="margin-top: 3px;" class="lead"id="selectedPeriod" align="center">Selected period:</h3>
+                </div>
+            </div><!--End Selecet Period row-->
+            
+            <div class="bd-example bd-example-tabs">
+                <nav class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="home" aria-expanded="true">Code progress and Quality</a>
+                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="profile" aria-expanded="false">Your Progress</a>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade active show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" aria-expanded="true">
+
+                        <div class="row justify-content-md-center">
+                            <div class="col-sm-auto">
+                                <h3 style="margin-top: 20px; margin-bottom: 30px;">Team Results</h3>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-md-center"> <!--Charts row -->
+                            <div class="col-sm-auto timeSeries"></div>
+                            <div class="col-sm-auto pieChart"></div>
+                        </div><!--End charts row -->
+
+                    </div>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" aria-expanded="false">
+
+                        <div class="row justify-content-md-center">
+                            <div class="col-sm-auto">
+                                <h4 style="margin-top: 20px; margin-bottom: 30px;">My Results</h4>
+                            </div>
+                        </div>
+                        <div class="row justify-content-md-center"><!--Counters row (NumOfFiles upload and etc.) -->
+                            <!--to populate .myDashboard data use #filesUloaded #filesReviewed-->
+                            <div class="col-sm-auto">
+                                <div class="myDashboard">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td>Number of files uploaded :</td>
+                                                <td id="filesUloaded">10</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Number of files reviewed :</td>
+                                                <td id="filesReviewed">8</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!--End counters row (NumOfFiles upload and etc.) -->
+
+                        <div  class="row justify-content-md-center">
+                            <div class="col-sm-auto">
+                                <h4 style="margin-top: 20px; margin-bottom: 20px;">My Badges</h4>
+                            </div>
+                        </div>
+                        <div style="hight: 350px;" class="row justify-content-md-center"><!--Badges row -->
+                            <!--to add badges use .userBadges -->
+                                <div class="myDashboard">
+                                    <div class="card-deck userBadges"> </div> <!-- Place to add badges cards -->
+                            </div>
+                        </div><!--End badges row -->
+                    </div>
+                </div>
             </div>
-          </div>
-        </div><!--End counters row (NumOfFiles upload and etc.) -->
+        </div><!--End container -->
+        <div th:replace="fragments/footer :: footer"></div>
+    </body>
 
-        <div class="row justify-content-md-center">
-          <div class="col-sm-auto">
-            <h3>My badges</h3>
-          </div>
-        </div>
-
-        <div class="row justify-content-md-center"><!--Badges row -->
-          <!--to add badges use .userBadges -->
-          <div class="col-sm-auto">
-            <div class="myDashboard">
-              <div class="card-deck userBadges"> </div> <!-- Place to add badges cards -->
-            </div>
-          </div>
-        </div><!--End badges row -->
-
-        <div class="row justify-content-md-center">
-          <div class="col-sm-auto">
-            <h3>Team results</h3>
-          </div>
-        </div>
-
-        <div class="row justify-content-md-center"> <!--Charts row -->
-          <div class="col-sm-auto timeSeries"></div>
-          <div class="col-sm-auto pieChart"></div>
-        </div><!--End charts row -->
-      </div><!--End container -->
-<div th:replace="fragments/footer :: footer"></div>
-  </body>
-
-  <script src="/js/dashboard/timeSeries.js"></script>
-  <script src="/js/dashboard/pieChart.js"></script>
-  <script src="/js/dashboard/populateUser.js"> </script>
+    <script src="/js/dashboard/timeSeries.js"></script>
+    <script src="/js/dashboard/pieChart.js"></script>
+    <script src="/js/dashboard/populateUser.js"></script>
 </html>

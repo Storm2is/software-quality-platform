@@ -62,7 +62,7 @@ function populateScrumMasterDashboard(data)
   populateUserTable(data.users);
 }
 
-function populateUserBadges(data)
+/*function populateUserBadges(data)
 {
   //to add badges use .userBadges
   $( ".userBadges" ).empty();
@@ -97,23 +97,37 @@ function populateUserBadges(data)
   }
   );
 }
+*/
+
+function populateUserBadges(data)
+{
+    //to add badges use .userBadges
+    $(".userBadges").empty();
+    data.badges.map(function (d) {
+        var bagesDiv = $(".userBadges");
+        bagesDiv.append(generateCardHtml(d));
+    }
+    );
+}
+
+function generateCardHtml(str) {
+    var imgSrc = getImgSrc(str);
+
+    var html = "<div class='card cardBadge'>" +
+            "<div class='card-header'>" + str + "</div>" +
+            "<div class='card-body'>" +
+            "<img class='card-img-top cardImage' src=" + imgSrc + " alt='" + str + "Card image cap'>" +
+            "</div>" +
+            "</div>";
+    return html;
+}
 
 function getDashboardObj(key){
   console.log(data);
   return data.filter(function(d){return d.period.id == key})[0];
 }
 
-function generateCardHtml(str){
-  var imgSrc=getImgSrc(str);
 
-  var html="<div class='card cardBadge'>"+
-           "<img class='card-img-top cardImage' src=" + imgSrc +" alt='" + str + "'>"+
-           "<div class='card-body'>" +
-           "<h7 class='card-title'>" + str + "</h7>" +
-           "</div>" +
-           "</div>";
-  return html;
-}
 
 function getImgSrc(str){
   var imgSrc="";

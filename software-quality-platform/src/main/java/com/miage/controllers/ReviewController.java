@@ -208,15 +208,15 @@ public class ReviewController {
         return "annotations";
     }
 
-    @PostMapping("/annotaions/{fileId}")
+    @PostMapping("/annotations/{fileId}")
     @ResponseBody
-    public String validateFile(@RequestBody AnnotationViewModel model) {
+    public String validateFile(@PathVariable int fileId) {
 
-        File file = fileRepository.findById(model.getFileId()).get();
+        File file = fileRepository.findById(fileId).get();
         file.setStatus(statusRepository.findById(3).get());
+        fileRepository.save(file);
 
-
-        return "/code/files";
+        return "/code/upload";
     }
 
 }

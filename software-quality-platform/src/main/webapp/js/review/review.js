@@ -20,11 +20,11 @@ $('#submitReviewBtn').on('click', function () {
 
 $('#submitAnnotationBtn').on('click', function () {
     var form = $("#submitAnnotationForm").serializeArray();
-    var data = objectifyForm(form);
+    //var data = objectifyForm(form);
     $.ajax({
         url: 'http://localhost:8080/review/annotations/' + $("#fileId").val(),
         dataType: 'application/json',
-        data: JSON.stringify(data),
+       
         async: false,
         cache: false,
         contentType: 'application/json; charset=utf-8',
@@ -32,9 +32,10 @@ $('#submitAnnotationBtn').on('click', function () {
         type: 'POST',
         success: function (data) {
             console.log("Success");
+            alert(1);
         }
     });
-    window.location = "/code/files";
+    window.location = "/code/upload";
 });
 
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Graphs example</title>
+        <title>Team Dashboard</title>
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,13 +19,14 @@
 
     <body>
         <div th:replace="fragments/header :: header"></div>
-        <div class="container mainGrid">
-            <div class="row justify-content-md-center">
-                <div class="col-sm-auto">
-                    <h2>Scrum Master Dashboard</h2>
-                </div>
-            </div>
-            <div class="row justify-content-md-center"><!--Selecet Period row-->
+
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li style ="font-size: 28px;" class="breadcrumb-item active" aria-current="page">Scrum Master Dashboard</li>
+                </ol>
+            </nav> 
+            <div style="margin-top: 20px; margin-bottom: 30px;" class="row justify-content-md-center"><!--Selecet Period row-->
                 <div class="col-sm-auto">
                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Select Period
@@ -34,64 +35,80 @@
                     <div class="dropdown-menu sprintPeriod" aria-labelledby="dropdownMenuLink"></div>
                 </div>
                 <div class="col-sm-auto">
-                    <h3 id="selectedPeriod">Selected period:</h3>
+                    <h3 style="margin-top: 3px;" class="lead" id="selectedPeriod" align="center">Selected period:</h3>
                 </div>
             </div><!--End Selecet Period row-->
 
-            <div class="row justify-content-md-center">
-                <div class="col-sm-auto">
-                    <h3>Manage Current Sprint</h3>
-                </div>
-            </div>
 
             <div class="row justify-content-md-center">
                 <div class="col-sm-auto ">
-                    <h5>Set Sprint Goal : </h5>
+                    <h5 class="lead">Set Sprint Goal : </h5>
                 </div>
                 <div class="col-sm-auto">
                     <div class="input-group mb-3">
                         <input type="text" class="form-control sprintGoalTxt" pattern="^[1-9][0-9]?$|^100$">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary setSprintGoal" type="button" >Button</button>
+                            <button class="btn btn-outline-secondary setSprintGoal" type="button" >Set Goal</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row justify-content-md-center">
-                <div class="col-sm-auto">
-                    <h3>Team results</h3>
+            <div class="bd-example bd-example-tabs">
+                <nav class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="home" aria-expanded="true">Project Progress & Code Quality</a>
+                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="profile" aria-expanded="false">Team Progress</a>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade active show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" aria-expanded="true">
+
+                      <div class="row justify-content-md-center">
+                            <div class="col-sm-auto">
+                                <h3 style="margin-top: 20px; margin-bottom: 30px;">Team Results</h3>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-md-center"> <!--Charts row -->
+                            <div class="col-sm-auto timeSeries"></div>
+                            <div class="col-sm-auto pieChart"></div>
+                        </div><!--End charts row -->
+
+                    </div>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" aria-expanded="false">
+                        <div class="row justify-content-md-center">
+                            <div class="col-sm-auto">
+                                <h3 style="margin-top: 20px; margin-bottom: 30px;">Team Progress</h3>
+                            </div>
+                        </div>
+
+
+                        <div class="row justify-content-md-center"> <!--users table row to populate header use .userTable #tableHead-->
+                            <div class="col-sm-auto">
+                                <table class="table usersTable table-bordered">
+                                    <thead class="thead-light">
+                                        <tr class="text-sm-center">
+                                            <th scope="col">\</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-sm-center">
+                                        <tr id="filesUploaded">
+                                            <td>Number of files uploaded :</td>
+                                        </tr>
+                                        <tr id="filesReviewed">
+                                            <td>Number of files reviewed :</td>
+                                        </tr>
+                                        <tr id="userBadges">
+                                            <td>User badges :</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div><!--End users table row -->
+                    </div>
                 </div>
             </div>
-
-            <div class="row justify-content-md-center"> <!--Charts row -->
-                <div class="col-sm-auto timeSeries"></div>
-                <div class="col-sm-auto pieChart"></div>
-            </div><!--End charts row -->
-
-            <div class="row justify-content-md-center"> <!--users table row to populate header use .userTable #tableHead-->
-                <div class="col-sm-auto">
-                    <table class="table usersTable">
-                        <thead>
-                            <tr class="text-sm-center">
-                                <th scope="col">\</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm-center">
-                            <tr id="filesUploaded">
-                                <td>Number of files uploaded :</td>
-                            </tr>
-                            <tr id="filesReviewed">
-                                <td>Number of files reviewed :</td>
-                            </tr>
-                            <tr id="userBadges">
-                                <td>User badges :</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div><!--End users table row -->
         </div><!--End container -->
+
         <div th:replace="fragments/footer :: footer"></div>
     </body>
 
