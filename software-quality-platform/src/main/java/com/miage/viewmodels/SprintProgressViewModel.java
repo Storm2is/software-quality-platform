@@ -7,6 +7,7 @@ package com.miage.viewmodels;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  *
@@ -14,23 +15,52 @@ import java.sql.Timestamp;
  */
 public class SprintProgressViewModel {
 
-    private Integer value;
+    private Float value;
     @JsonFormat(pattern = "dd.MM.yyyy")
     private Timestamp date;
 
     public SprintProgressViewModel() {
     }
 
-    public SprintProgressViewModel(Integer value, Timestamp date) {
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 47 * hash + Objects.hashCode(this.value);
+        hash = 47 * hash + Objects.hashCode(this.date);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SprintProgressViewModel other = (SprintProgressViewModel) obj;
+        if (!Objects.equals(this.value, other.value)) {
+            return false;
+        }
+        if (!Objects.equals(this.date, other.date)) {
+            return false;
+        }
+        return true;
+    }
+
+    public SprintProgressViewModel(Float value, Timestamp date) {
         this.value = value;
         this.date = date;
     }
 
-    public Integer getValue() {
+    public Float getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(Float value) {
         this.value = value;
     }
 

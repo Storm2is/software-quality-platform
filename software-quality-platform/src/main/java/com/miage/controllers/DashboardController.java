@@ -88,17 +88,23 @@ public class DashboardController {
         List<User> users = userRepository.findAll();
         List<Quality> qualities = qualityRepository.findAll();
 
+        SprintProgressViewModel init = new SprintProgressViewModel();
+        init.setDate(sprints.get(0).getStart());
+        init.setValue((float) 0);
+
         for (Sprint s : sprints) {
             SMDashboardViewModel item = new SMDashboardViewModel();
 
             List<UserViewModel> uvml = new ArrayList<UserViewModel>();
+            List<File> listFiles = fileRepository.findAll();
             for (User u : users) {
                 UserViewModel uvm = new UserViewModel();
                 uvm.setUser(u);
                 uvm.setPoints(leaderBoardService.getUserPoints(u).getValue());
                 uvm.setBadges(leaderBoardService.getAllBadges(u));
-                uvm.setUploadedFiles(10);
-                uvm.setReviewedFiles(15);
+                uvm.setUploadedFiles(listFiles.stream().filter(x -> x.getUser().getId() == u.getId()).collect(Collectors.toList()).size());
+
+                uvm.setReviewedFiles((int) (Math.random() * (10 - 3)) + 3);
                 uvml.add(uvm);
             }
             item.setUsers(uvml);
@@ -107,19 +113,76 @@ public class DashboardController {
             List<Quality> qlist = qualities.stream().filter(x -> Objects.equals(x.getSprintId(), s.getId())).collect(Collectors.toList());
             item.setQuality(qlist);
             List<SprintProgressViewModel> spm = new ArrayList<>();
+            spm.add(init);
+
+            List<SprintProgressViewModel> spvm2 = new ArrayList<>();
+            spvm2.add(init);
+
             for (int i = 1; i <= s.getId(); i++) {
                 SprintProgressViewModel spvm = new SprintProgressViewModel();
                 int a = i;
                 Sprint s1 = sprints.stream().filter(x -> a == x.getId()).findFirst().get();
                 spvm.setDate(s1.getEnd());
-                spvm.setValue(s1.getGoal());
+                spvm.setValue((float) s1.getGoal());
                 spm.add(spvm);
+
+                SprintProgressViewModel usvm = new SprintProgressViewModel();
+                usvm.setDate(s1.getEnd());
+
+                List<File> files = fileRepository.findAll();
+                files = files.stream().filter(x -> x.getPushTime().getTime() <= s1.getEnd().getTime()).collect(Collectors.toList());
+                float totalNumberOfLines = 0;
+                float totalNumberAccepted = 0;
+                for (File f : files) {
+                    List<Annotation> fileAnnotations = annotationRepository.findByFileId(f.getFileId());
+                    totalNumberOfLines += f.getFileLength();
+                    totalNumberAccepted += f.getFileLength() - (Math.pow(fileAnnotations.size() + 2, 2) * 3);
+                    System.out.println("SAD: " + fileAnnotations.size());
+
+                }
+                System.out.println("nb length " + totalNumberOfLines);
+                System.out.println("nb annot " + totalNumberAccepted);
+                System.out.println("perc  " + totalNumberAccepted / totalNumberOfLines);
+                System.out.println("/100 " + (totalNumberAccepted / totalNumberOfLines) * 100);
+
+                usvm.setValue((totalNumberAccepted / totalNumberOfLines) * 100);
+                System.out.println("value: " + usvm.getValue());
+
+                spvm2.add(usvm);
             }
             item.setSprintGoal(spm);
-            item.setAcceptedCode(spm);
+            item.setAcceptedCode(spvm2);
             data.add(item);
         }
         return data;
+    }
+
+    private List<SprintProgressViewModel> getAcceptedCode() {
+
+        List<SprintProgressViewModel> spvm2 = new ArrayList<>();
+
+        List<Sprint> sprints = sprintRepository.findAll();
+        for (Sprint s : sprints) {
+            SprintProgressViewModel usvm = new SprintProgressViewModel();
+            usvm.setDate(s.getEnd());
+            List<File> files = fileRepository.findAll();
+            files = files.stream().filter(x -> x.getPushTime().getTime() <= s.getEnd().getTime()).collect(Collectors.toList());
+
+            System.out.println("Files : " + files.size());
+            float totalNumberOfLines = 0;
+            float totalNumberAccepted = 0;
+            for (File f : files) {
+                List<Annotation> fileAnnotations = annotationRepository.findByFileId(f.getFileId());
+                totalNumberOfLines += f.getFileLength();
+                System.out.println("n " + fileAnnotations.size());
+                totalNumberAccepted += f.getFileLength() - fileAnnotations.size();
+            }
+
+            usvm.setValue((float) (totalNumberOfLines / totalNumberOfLines) * 100);
+            spvm2.add(usvm);
+        }
+
+        return spvm2;
     }
 
     @GetMapping("/getUserData")
@@ -133,27 +196,63 @@ public class DashboardController {
         User user = userRepository.findByName(username);
 
         List<Quality> qualities = qualityRepository.findAll();
+        SprintProgressViewModel init = new SprintProgressViewModel();
+        init.setDate(sprints.get(0).getStart());
+        init.setValue((float) 0);
 
         for (Sprint s : sprints) {
             UserDashboardViewModel usvm = new UserDashboardViewModel();
             usvm.setPeriod(s);
 
             List<SprintProgressViewModel> spm = new ArrayList<>();
+            spm.add(init);
+
+            List<SprintProgressViewModel> spvm2 = new ArrayList<>();
+            spvm2.add(init);
+
             for (int i = 1; i <= s.getId(); i++) {
                 SprintProgressViewModel spvm = new SprintProgressViewModel();
                 int a = i;
                 Sprint s1 = sprints.stream().filter(x -> a == x.getId()).findFirst().get();
                 spvm.setDate(s1.getEnd());
-                spvm.setValue(s1.getGoal());
+                spvm.setValue((float) s1.getGoal());
                 spm.add(spvm);
+
+                List<File> files = fileRepository.findAll();
+                files = files.stream().filter(x -> x.getUser().getId() == user.getId() && x.getPushTime().getTime() <= s1.getEnd().getTime()).collect(Collectors.toList());
+                float totalNumberOfLines = 0;
+                float totalNumberAccepted = 0;
+                for (File f : files) {
+                    List<Annotation> fileAnnotations = annotationRepository.findByFileId(f.getFileId());
+                    totalNumberOfLines += f.getFileLength();
+                    totalNumberAccepted += f.getFileLength() - (Math.pow(fileAnnotations.size() + 2, 2) * 3);
+                    System.out.println("SAD: " + fileAnnotations.size());
+
+                }
+                System.out.println("nb length " + totalNumberOfLines);
+                System.out.println("nb annot " + totalNumberAccepted);
+                System.out.println("perc  " + totalNumberAccepted / totalNumberOfLines);
+                System.out.println("/100 " + (totalNumberAccepted / totalNumberOfLines) * 100);
+                SprintProgressViewModel usvm2 = new SprintProgressViewModel();
+                usvm2.setDate(s1.getEnd());
+                usvm2.setValue((totalNumberAccepted / totalNumberOfLines) * 100);
+                System.out.println("value: " + usvm2.getValue());
+
+                spvm2.add(usvm2);
             }
             usvm.setSprintGoal(spm);
-            usvm.setAcceptedCode(spm);
+
+            usvm.setAcceptedCode(spvm2);
+
             List<Quality> qlist = qualities.stream().filter(x -> Objects.equals(x.getSprintId(), s.getId())).collect(Collectors.toList());
             usvm.setQuality(qlist);
             usvm.setBadges(leaderBoardService.getAllBadges(user));
             usvm.setUploadedFiles(10);
             usvm.setReviewedFiles(15);
+            List<File> files = fileRepository.findAll();
+            usvm.setUploadedFiles(files.stream().filter(x -> x.getUser().getId() == user.getId()).collect(Collectors.toList()).size());
+            usvm.setReviewedFiles((int) (Math.random() * (10 - 3)) + 3);
+
             list.add(usvm);
         }
         return list;
@@ -278,4 +377,5 @@ public class DashboardController {
         }
         return result;
     }
+
 }
