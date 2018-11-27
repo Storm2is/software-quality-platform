@@ -1,13 +1,10 @@
-//var data= [{value:1,date: "20.01.2018"},{value:3,date:"20.02.2018"},{value:2,date:"20.03.2018"},{value:3,date:"20.04.2018"},{value:4,date:"20.05.2018"},{value:1,date:"20.06.2018"},{value:6,date:"20.07.2018"}];
-//plotTimeSeries(data);
-
 function plotTimeSeries(progressData,goalData) {
   //Clear all previous timeSeries
   d3.selectAll("#timeSeries").remove();
 
-  var margin = {top: 50, right: 20, bottom: 60, left: 90},
-      width = 400 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+  var margin = {top: 50, right: 20, bottom: 100, left: 90},
+      width = 600 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
 
   var parseTime = d3.timeParse("%d.%m.%Y");
   //data.map(function(d){console.log(parseTime(d.date));console.log("y=",d.value)});
@@ -50,7 +47,7 @@ function plotTimeSeries(progressData,goalData) {
     .append("text") //add label
     .attr("fill", "#000")
     .attr("x", width/2 )
-    .attr("y", margin.bottom/2 )
+    .attr("y", 30 )
     .style("text-anchor", "middle")
     .text("Period");
 
@@ -127,13 +124,46 @@ function plotTimeSeries(progressData,goalData) {
       .style("font-size", "16px")
       .style("text-decoration", "underline")
       .text("Progress vs Date Graph");
-  /*
-  //add text helpers
-  g.append("g").selectAll("textValues")
-    .data(data)
-    .enter()
-      .append("text")
-      .attr("x",  function(d) { return x(parseTime(d.date)) })
-      .attr("y", function(d) { return y(d.value) })
-      .text(function(d) { return d.value });*/
+
+//<rect x="50" y="20" width="150" height="150"
+var legend = g.append("g")
+  .attr("class","legend")
+  //.attr("transform","translate("+width/2+","+height+50+")");
+  .attr("transform","translate("+(0)+","+(height+30)+")");
+
+  legend.append("g")
+        .attr("class","legend")
+        .style("font-size","12px")
+        .style("fill","steelblue")
+        .append("rect")
+        .attr("transform","translate(5,5)")
+          .attr("x","10")
+          .attr("y","10")
+          .attr("width","30")
+          .attr("height","3");
+
+  legend.append("g")
+        .attr("class","legend")
+        .style("font-size","12px")
+        .style("fill","red")
+        .append("rect")
+        .attr("transform","translate(5,25)")
+          .attr("x","10")
+          .attr("y","10")
+          .attr("width","30")
+          .attr("height","3");
+
+  legend.append("g")
+        .attr("class","legend")
+        .append("text")
+        .attr('x', 50)              // NEW
+        .attr('y', 20)              // NEW
+        .text("% accepted lines")
+
+  legend.append("g")
+        .attr("class","legend")
+        .append("text")
+        .attr('x', 50)              // NEW
+        .attr('y', 40)              // NEW
+        .text("% sprint goal")
 }

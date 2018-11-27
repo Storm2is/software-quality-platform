@@ -1,18 +1,11 @@
-/*
-var data = [ {label:"first", value:10},
-             {label:"second", value:10},
-             {label:"third", value:10} ];
-*/
-//plotPieChart(data);
-
 function plotPieChart(data){
   d3.selectAll("#pieChart").remove();
 
-  var margin = {top: 50, right: 20, bottom: 60, left: 90},
-      width = 400 - margin.left - margin.right,
+  var margin = {top: 50, right: 20, bottom: 60, left: 250},
+      width = 750 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom,
       innerRadius = 50,
-      radius = Math.min(width, height) / 2;
+      radius = Math.min(width-100, height) / 2;
 
   var svg=d3.select(".pieChart")
             .append("svg")
@@ -70,5 +63,49 @@ function plotPieChart(data){
       .attr("text-anchor", "middle")                          //center the text on it's origin
       .text(function(d, i) { return data[i].label; });        //get the label from our original data array
 
+      var legendRectSize = 18;                                  // NEW
+      var legendSpacing = 4;                                    // NEW
+      console.log(color.domain())
+      var legend = g.selectAll('.legend')                     // NEW
+        .data(color.domain())                                   // NEW
+        .enter()                                                // NEW
+        .append('g')                                            // NEW
+        .attr('class', 'legend')                                // NEW
+        .attr('transform', function(d, i) {                     // NEW
+          var height = legendRectSize + legendSpacing;          // NEW
+          var offset =  height * color.domain().length / 2;     // NEW
+          var horz = -2 * legendRectSize+tRight-230;                       // NEW
+          var vert = i * height - offset -tDown+70;                       // NEW
+          return 'translate(' + horz + ',' + vert + ')';        // NEW
+        });
 
+        legend.append('rect')                                     // NEW
+            .attr('width', legendRectSize)                          // NEW
+            .attr('height', legendRectSize)                         // NEW
+            .style('fill', color)                                   // NEW
+            .style('stroke', color);                                // NEW
+
+          legend.append('text')                                     // NEW
+            .attr('x', legendRectSize + legendSpacing)              // NEW
+            .attr('y', legendRectSize - legendSpacing)              // NEW
+            .text(function(d, i) { return transformLegend(data[i].label); });
+
+            function transformLegend(str){
+                var legend="";
+                switch(str.toUpperCase()) {
+                   case 'GOOD':
+                     legend="less 10% of annotation";
+                     break;
+                   case 'MEDIUM':
+                     legend="from 10% of annotation to 20%";
+                     break;
+                   case 'BAD':
+                     legend="more 10% of annotation";
+                     break;
+                   default:
+                     legend="";
+                     break;
+               }
+               return legend;
+            }
 }
