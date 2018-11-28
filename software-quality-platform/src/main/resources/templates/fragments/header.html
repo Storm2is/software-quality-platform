@@ -25,11 +25,9 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Dashbaord
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item team" href="#">Team Progress</a>
-                            <div class="dropdown-divider"></div>
-
-                            <a class="dropdown-item member" href="#">Your Progress</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item member">Your Progress</a>
+                            <a th:if="${#httpServletRequest.remoteUser == 'Oluchi'}" class="dropdown-item team" >Team Progress</a>
                         </div>
                     </li>
                     <li class="dropdown">

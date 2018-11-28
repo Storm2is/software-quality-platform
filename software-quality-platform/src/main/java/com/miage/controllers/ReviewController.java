@@ -163,7 +163,7 @@ public class ReviewController {
             annotation.setLineNb(-1);
             annotation.setTime(new Timestamp(new Date().getTime()));
             annotationRepository.save(annotation);
-            file.setStatus(statusRepository.findById(4).get());
+            file.setStatus(statusRepository.findById(3).get());
             pointService.increasePoints(reviewer, GainRules.REVIEWER_VALIDATE, file);
         }
 
@@ -176,8 +176,7 @@ public class ReviewController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByName(username);
-        
-        
+
         File f = fileRepository.findById(fileId).get();
         Resource file = storageService.loadAsResource(f.getFileName());
         String fileLine = "";

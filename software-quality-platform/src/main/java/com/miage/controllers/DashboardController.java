@@ -104,7 +104,7 @@ public class DashboardController {
                 uvm.setBadges(leaderBoardService.getAllBadges(u));
                 uvm.setUploadedFiles(listFiles.stream().filter(x -> x.getUser().getId() == u.getId()).collect(Collectors.toList()).size());
 
-                uvm.setReviewedFiles((int) (Math.random() * (10 - 3)) + 3);
+                uvm.setReviewedFiles(getNbFileReviewed(u.getId(), s.getId()));
                 uvml.add(uvm);
             }
             item.setUsers(uvml);
@@ -137,16 +137,8 @@ public class DashboardController {
                     List<Annotation> fileAnnotations = annotationRepository.findByFileId(f.getFileId());
                     totalNumberOfLines += f.getFileLength();
                     totalNumberAccepted += f.getFileLength() - (Math.pow(fileAnnotations.size() + 2, 2) * 3);
-                    System.out.println("SAD: " + fileAnnotations.size());
-
                 }
-                System.out.println("nb length " + totalNumberOfLines);
-                System.out.println("nb annot " + totalNumberAccepted);
-                System.out.println("perc  " + totalNumberAccepted / totalNumberOfLines);
-                System.out.println("/100 " + (totalNumberAccepted / totalNumberOfLines) * 100);
-
                 usvm.setValue((totalNumberAccepted / totalNumberOfLines) * 100);
-                System.out.println("value: " + usvm.getValue());
 
                 spvm2.add(usvm);
             }
@@ -155,34 +147,6 @@ public class DashboardController {
             data.add(item);
         }
         return data;
-    }
-
-    private List<SprintProgressViewModel> getAcceptedCode() {
-
-        List<SprintProgressViewModel> spvm2 = new ArrayList<>();
-
-        List<Sprint> sprints = sprintRepository.findAll();
-        for (Sprint s : sprints) {
-            SprintProgressViewModel usvm = new SprintProgressViewModel();
-            usvm.setDate(s.getEnd());
-            List<File> files = fileRepository.findAll();
-            files = files.stream().filter(x -> x.getPushTime().getTime() <= s.getEnd().getTime()).collect(Collectors.toList());
-
-            System.out.println("Files : " + files.size());
-            float totalNumberOfLines = 0;
-            float totalNumberAccepted = 0;
-            for (File f : files) {
-                List<Annotation> fileAnnotations = annotationRepository.findByFileId(f.getFileId());
-                totalNumberOfLines += f.getFileLength();
-                System.out.println("n " + fileAnnotations.size());
-                totalNumberAccepted += f.getFileLength() - fileAnnotations.size();
-            }
-
-            usvm.setValue((float) (totalNumberOfLines / totalNumberOfLines) * 100);
-            spvm2.add(usvm);
-        }
-
-        return spvm2;
     }
 
     @GetMapping("/getUserData")
@@ -219,24 +183,20 @@ public class DashboardController {
                 spm.add(spvm);
 
                 List<File> files = fileRepository.findAll();
-                files = files.stream().filter(x -> x.getUser().getId() == user.getId() && x.getPushTime().getTime() <= s1.getEnd().getTime()).collect(Collectors.toList());
+                files = files.stream().filter(x -> x.getPushTime().getTime() <= s1.getEnd().getTime()).collect(Collectors.toList());
                 float totalNumberOfLines = 0;
                 float totalNumberAccepted = 0;
                 for (File f : files) {
                     List<Annotation> fileAnnotations = annotationRepository.findByFileId(f.getFileId());
                     totalNumberOfLines += f.getFileLength();
                     totalNumberAccepted += f.getFileLength() - (Math.pow(fileAnnotations.size() + 2, 2) * 3);
-                    System.out.println("SAD: " + fileAnnotations.size());
-
+                    if (totalNumberAccepted < 0) {
+                        totalNumberAccepted = totalNumberAccepted * -1;
+                    }
                 }
-                System.out.println("nb length " + totalNumberOfLines);
-                System.out.println("nb annot " + totalNumberAccepted);
-                System.out.println("perc  " + totalNumberAccepted / totalNumberOfLines);
-                System.out.println("/100 " + (totalNumberAccepted / totalNumberOfLines) * 100);
                 SprintProgressViewModel usvm2 = new SprintProgressViewModel();
                 usvm2.setDate(s1.getEnd());
                 usvm2.setValue((totalNumberAccepted / totalNumberOfLines) * 100);
-                System.out.println("value: " + usvm2.getValue());
 
                 spvm2.add(usvm2);
             }
@@ -251,7 +211,7 @@ public class DashboardController {
             usvm.setReviewedFiles(15);
             List<File> files = fileRepository.findAll();
             usvm.setUploadedFiles(files.stream().filter(x -> x.getUser().getId() == user.getId()).collect(Collectors.toList()).size());
-            usvm.setReviewedFiles((int) (Math.random() * (10 - 3)) + 3);
+            usvm.setReviewedFiles(getNbFileReviewed(user.getId(), s.getId()));
 
             list.add(usvm);
         }
@@ -376,6 +336,25 @@ public class DashboardController {
             result.put(sprintID, perc_accepted_by_sprint);
         }
         return result;
+    }
+
+    public int getNbFileReviewed(int userId, int sprintID) {
+        Timestamp startTime = sprintRepository.findById(sprintID).get().getStart();
+        Timestamp endTime = sprintRepository.findById(sprintID).get().getEnd();
+
+        int count = 0;
+
+        for (Annotation an : annotationRepository.findAll()) {
+
+            if (an.getTime().after(startTime) && an.getTime().before(endTime)) {
+                if (annotationRepository.findByUserId(userId).contains(an.getAnnotationId())) {
+
+                    count++;
+                }
+            }
+        }
+
+        return count;
     }
 
 }

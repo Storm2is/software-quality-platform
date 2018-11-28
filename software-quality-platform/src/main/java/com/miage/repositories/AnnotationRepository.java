@@ -19,4 +19,6 @@ public interface AnnotationRepository extends JpaRepository<Annotation, Integer>
     @Query("SELECT a FROM Annotation a WHERE a.file.fileId = ?1")
     List<Annotation> findByFileId(int fileId);
 
+    @Query("SELECT a.annotationId FROM Annotation a WHERE a.user.userId = ?1 group by a.file.fileId")
+    List<Integer> findByUserId(int userId);
 }
